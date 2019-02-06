@@ -1,0 +1,16 @@
+{
+  "name": "skeleton",
+  "version": "1.0.0",
+  "description": "A skeleton react/django-rest project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react",
+    "node",
+    "django"
+  ],
+  "author": "Jonathan",
+  "license": "ISC"
+}
