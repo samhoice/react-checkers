@@ -4,3 +4,4 @@ venv
 *.swp
 *.sqlite3
 node_modules
+build/
