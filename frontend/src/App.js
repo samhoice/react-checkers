@@ -2,13 +2,21 @@ import React, { Component } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import Cookies from "js-cookie";
-
+import { Container, Row, Col } from "react-bootstrap";
+import { ListGroup, Navbar, Nav, NavItem } from "react-bootstrap";
 import { HashRouter as Router, Route, Link } from "react-router-dom";
+import { LinkContainer } from "react-router-bootstrap";
+
 const axios = require("axios");
 
 class Home extends Component {
     render() {
-        return <div>Home</div>;
+        console.log("Home");
+        return (
+            <div>
+                <h1>Home</h1>
+            </div>
+        );
     }
 }
 
@@ -65,7 +73,7 @@ class LoginForm extends Component {
 
 class UserListItem extends Component {
     render() {
-        return <li>{this.props.user.username}</li>;
+        return <ListGroup.Item>{this.props.user.username}</ListGroup.Item>;
     }
 }
 
@@ -98,13 +106,19 @@ class Users extends Component {
         return (
             <div>
                 <h1>Users</h1>
-                <div>
-                    <ul>
-                        {this.state.userList.map(user => (
-                            <UserListItem user={user} />
-                        ))}
-                    </ul>
-                </div>
+                <Container>
+                    <Row>
+                        <Col />
+                        <Col xs={6}>
+                            <ListGroup>
+                                {this.state.userList.map(user => (
+                                    <UserListItem user={user} />
+                                ))}
+                            </ListGroup>
+                        </Col>
+                        <Col />
+                    </Row>
+                </Container>
             </div>
         );
     }
@@ -151,16 +165,23 @@ class App extends Component {
             <div className="App">
                 <Router basename="/">
                     <div>
-                        <ul>
-                            <li>
-                                <Link to="/">Home</Link>
-                            </li>
-                            <li>
-                                <Link to="/users/">Users</Link>
-                            </li>
-                        </ul>
+                        <Navbar bg="light" expand="lg">
+                            <Navbar.Brand>Stuff Here</Navbar.Brand>
+                            <Nav>
+                                <NavItem>
+                                    <LinkContainer to="/">
+                                        <Nav.Link>Home</Nav.Link>
+                                    </LinkContainer>
+                                </NavItem>
+                                <NavItem>
+                                    <LinkContainer to="/users/">
+                                        <Nav.Link>Users</Nav.Link>
+                                    </LinkContainer>
+                                </NavItem>
+                            </Nav>
+                        </Navbar>
 
-                        <Route exact path="/index.html" component={Home} />
+                        <Route exact path="/" component={Home} />
                         <Route path="/users/" component={Users} />
                         <Route
                             path="/login"
