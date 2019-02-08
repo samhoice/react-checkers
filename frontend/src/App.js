@@ -3,7 +3,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import Cookies from "js-cookie";
 
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { HashRouter as Router, Route, Link } from "react-router-dom";
 const axios = require("axios");
 
 class Home extends Component {
@@ -156,7 +156,7 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                <Router basename="/skele/static/frontend/">
+                <Router basename="/">
                     <div>
                         <ul>
                             <li>
