@@ -34,7 +34,6 @@ class LoginForm extends Component {
     }
 
     handleSubmit(e) {
-        console.log("loginform - handleSubmit");
         e.preventDefault();
         this.props.postCreds(this.state.username, this.state.password);
     }
@@ -66,7 +65,6 @@ class LoginForm extends Component {
 
 class UserListItem extends Component {
     render() {
-        console.log(this.props);
         return <li>{this.props.user.username}</li>;
     }
 }
@@ -81,7 +79,6 @@ class Users extends Component {
     }
 
     procResponse(response) {
-        console.log(response);
         const userList = response.data.results.slice();
         this.setState({ userList: userList });
     }
@@ -90,7 +87,6 @@ class Users extends Component {
         axios
             .get("/skele/api/users/")
             .then(response => {
-                console.log(response);
                 this.procResponse(response);
             })
             .catch(function(error) {
@@ -126,9 +122,6 @@ class App extends Component {
     // django login
     //
     postCreds(username, password) {
-        console.log("postCreds");
-        console.log(username);
-        console.log(password);
         const csrf = Cookies.get("csrftoken");
         axios
             .post(
@@ -164,9 +157,6 @@ class App extends Component {
                             </li>
                             <li>
                                 <Link to="/users/">Users</Link>
-                            </li>
-                            <li>
-                                <Link to="/login">Login</Link>
                             </li>
                         </ul>
 
