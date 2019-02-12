@@ -6,6 +6,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import { ListGroup, Navbar, Nav, NavItem } from "react-bootstrap";
 import { HashRouter as Router, Route, Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
+import { GameList } from "./game-list";
 
 const axios = require("axios");
 
@@ -127,14 +128,12 @@ class Users extends Component {
 class Checker extends Component {
     render() {
         let checker_class = 0;
-        if(this.props.type == 2) {
+        if (this.props.type == 2) {
             checker_class = "red-checker";
         } else if (this.props.type == 3) {
             checker_class = "black-checker";
         }
-        return (
-            <div className={checker_class}></div>
-        );
+        return <div className={checker_class} />;
     }
 }
 
@@ -147,7 +146,7 @@ class BoardSquare extends Component {
 
         let checker = null;
         if (this.props.square > 1) {
-            checker = <Checker type={this.props.square} />
+            checker = <Checker type={this.props.square} />;
         }
 
         return (
@@ -234,12 +233,19 @@ class App extends Component {
                                     </LinkContainer>
                                 </NavItem>
                                 <NavItem>
+                                    <LinkContainer to="/game/">
+                                        <Nav.Link>Games</Nav.Link>
+                                    </LinkContainer>
+                                </NavItem>
+                                <NavItem>
                                     <LinkContainer to="/users/">
                                         <Nav.Link>Users</Nav.Link>
                                     </LinkContainer>
                                 </NavItem>
                             </Nav>
                         </Navbar>
+
+                        <Route path="/game/" render={props => <GameList />} />
 
                         <Route
                             exact

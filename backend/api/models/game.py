@@ -2,13 +2,22 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Game(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+     black_player = models.ForeignKey(User, 
+             on_delete=models.SET_NULL, 
+             null=True, 
+             related_name='b_player_set')
+     white_player = models.ForeignKey(User, 
+             on_delete=models.SET_NULL, 
+             null=True,
+             related_name='w_player_set')
+     created = models.DateTimeField(auto_now_add = True)
 
 class Board(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    layout = models.CharField(max_length=64, default="BW"*32)
+    layout = models.CharField(max_length=64, default="B"*12 + " "*8 + "W"*12)
 
-    x = {0: {'b': (),       'f': (4)},
+    adjacency_matrix = {
+        0:  {'b': (),       'f': (4)},
         1:  {'b': (),       'f': (4, 5)},
         2:  {'b': (),       'f': (5, 6)},
         3:  {'b': (),       'f': (6, 7)},
@@ -39,4 +48,12 @@ class Board(models.Model):
         28: {'b': (24, 25), 'f': ()},
         29: {'b': (25, 26), 'f': ()},
         30: {'b': (26, 27), 'f': ()},
-        31: {'b': (27),     'f': ()}}
+        31: {'b': (27),     'f': ()}
+    }
+
+class Move(models.Model):
+    from_sq = models.IntegerField()
+    to_sq = models.IntegerField()
+    created = models.DateTimeField()
+    moved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
