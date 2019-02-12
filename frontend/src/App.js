@@ -124,11 +124,71 @@ class Users extends Component {
     }
 }
 
+class Checker extends Component {
+    render() {
+        let checker_class = 0;
+        if(this.props.type == 2) {
+            checker_class = "red-checker";
+        } else if (this.props.type == 3) {
+            checker_class = "black-checker";
+        }
+        return (
+            <div className={checker_class}></div>
+        );
+    }
+}
+
+class BoardSquare extends Component {
+    render() {
+        let bg_class = "board-square black-square";
+        if (this.props.square == 0) {
+            bg_class = "board-square white-square";
+        }
+
+        let checker = null;
+        if (this.props.square > 1) {
+            checker = <Checker type={this.props.square} />
+        }
+
+        return (
+            <Col xs={1} className={bg_class}>
+                {checker}
+            </Col>
+        );
+    }
+}
+
+class Board extends Component {
+    render() {
+        return (
+            <Container>
+                {this.props.boardState.map(row => (
+                    <Row className="checker-row">
+                        {row.map(sq => (
+                            <BoardSquare square={sq} />
+                        ))}
+                    </Row>
+                ))}
+            </Container>
+        );
+    }
+}
+
 class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            key: ""
+            key: "",
+            board: [
+                [0, 2, 0, 1, 0, 1, 0, 1],
+                [1, 0, 1, 0, 2, 0, 1, 0],
+                [0, 1, 0, 1, 0, 1, 0, 1],
+                [1, 0, 1, 0, 1, 0, 3, 0],
+                [0, 1, 0, 1, 0, 1, 0, 1],
+                [1, 0, 1, 0, 3, 0, 1, 0],
+                [0, 1, 0, 1, 0, 3, 0, 1],
+                [1, 0, 1, 0, 3, 0, 3, 0]
+            ]
         };
     }
 
@@ -166,7 +226,7 @@ class App extends Component {
                 <Router basename="/">
                     <div>
                         <Navbar bg="light" expand="lg">
-                            <Navbar.Brand>Stuff Here</Navbar.Brand>
+                            <Navbar.Brand>React Checkers</Navbar.Brand>
                             <Nav>
                                 <NavItem>
                                     <LinkContainer to="/">
@@ -181,7 +241,16 @@ class App extends Component {
                             </Nav>
                         </Navbar>
 
-                        <Route exact path="/" component={Home} />
+                        <Route
+                            exact
+                            path="/"
+                            render={props => (
+                                <Board
+                                    {...props}
+                                    boardState={this.state.board}
+                                />
+                            )}
+                        />
                         <Route path="/users/" component={Users} />
                         <Route
                             path="/login"

@@ -116,7 +116,7 @@ USE_TZ = True
 STATIC_URL = '/skele/static/'
 
 STATICFILES_DIRS = [
-    ('frontend', '/home/jon/skeleton/frontend/build/'),
+    ('frontend', '/home/jon/react-checkers/frontend/build/'),
 ]
 
 REST_FRAMEWORK = {
