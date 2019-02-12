@@ -71,16 +71,18 @@
 }
 
 .red-checker {
-    border-radius: 50%;
-    width: 70%;
-    height: 70%;
+    border-radius: 48%;
+    margin: 10%;
+    width: 80%;
+    height: 80%;
     background-color: #993333;
     align-items: center;
 }
 
 .black-checker {
-    border-radius: 50%;
-    width: 70%;
-    height: 70%;
+    border-radius: 48%;
+    margin: 10%;
+    width: 80%;
+    height: 80%;
     background-color: #000000;
 }

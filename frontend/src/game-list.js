@@ -1,15 +1,19 @@
 import React, { Component } from "react";
 import { Container, Row, Col } from "react-bootstrap";
+import { HashRouter as Router, Route, Link } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const axios = require("axios");
 
 class GameListItem extends Component {
     render() {
         return (
-            <Row>
-                <Col>{this.props.game.id}</Col>
-                <Col>{this.props.game.created}</Col>
-            </Row>
+            <Link to="/">
+                <Row>
+                    <Col>{this.props.game.id}</Col>
+                    <Col>{this.props.game.created}</Col>
+                </Row>
+            </Link>
         );
     }
 }
@@ -43,6 +47,28 @@ class GameList extends Component {
             });
     }
 
+    createGame(e) {
+        e.preventDefault();
+
+        const csrf = Cookies.get("csrftoken");
+
+        axios
+            .post(
+                "/skele/api/games/",
+                {},
+                {
+                    xsrfCookieName: "csrftoken",
+                    xsrfHeaderName: "X-CSRFToken"
+                }
+            )
+            .then(function(response) {
+                console.log(response);
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+    }
+
     render() {
         return (
             <Container>
@@ -50,6 +76,14 @@ class GameList extends Component {
                 {this.state.gameList.map(game => (
                     <GameListItem game={game} />
                 ))}
+                <form onSubmit={e => this.createGame(e)}>
+                    <input
+                        className="btn btn-primary"
+                        type="submit"
+                        name="submit"
+                        value="Create Game"
+                    />
+                </form>
             </Container>
         );
     }
