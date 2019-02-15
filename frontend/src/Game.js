@@ -1,8 +1,20 @@
 import React, { Component } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 
+const axios = require("axios");
+
 class Game extends Component {
+
     componentDidMount() {
+        var url = "/skele/api/games/" + this.props.match.params.id;
+        axios
+            .get(url)
+            .then(response => {
+                this.props.processGameData(response)
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
 
     render() {
@@ -57,9 +69,11 @@ class BoardSquare extends Component {
 
 class Board extends Component {
     render() {
+        var board = this.props.boardState.slice()
+        board.reverse()
         return (
             <Container>
-                {this.props.boardState.map(row => (
+                {board.map(row => (
                     <Row className="checker-row">
                         {row.map(sq => (
                             <BoardSquare square={sq} />

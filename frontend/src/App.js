@@ -39,6 +39,12 @@ class App extends Component {
                 [1, 0, 5, 0, 3, 0, 3, 0]
             ]
         };
+        this.processGameData = this.processGameData.bind(this);
+    }
+
+
+    processGameData(response) {
+        this.setState({board: response.data.board_set[0].layout.slice()});
     }
 
     // TODO: Change this to use session auth and log in through the regular
@@ -115,6 +121,7 @@ class App extends Component {
                                 <Game
                                     {...props}
                                     boardState={this.state.board}
+                                    processGameData = {this.processGameData}
                                 />
                             )}
                         />

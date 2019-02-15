@@ -17,6 +17,7 @@ class BoardSerializer(serializers.ModelSerializer):
         fields = ('id', 'layout')
 
     def get_layout(self, obj):
+        # TODO the x and y values here are reversed. Dummy
         pos_mapping = {
             0: (0,0),
             1: (0,2),
