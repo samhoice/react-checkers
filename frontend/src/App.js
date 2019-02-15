@@ -4,120 +4,21 @@ import "./App.css";
 import Cookies from "js-cookie";
 import { Container, Row, Col } from "react-bootstrap";
 import { ListGroup, Navbar, Nav, NavItem } from "react-bootstrap";
-import { HashRouter as Router, Route, Link } from "react-router-dom";
+import { HashRouter as Router, Route, Link, Redirect } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { GameList } from "./GameList";
+import { Game } from "./Game";
 import { UserList } from "./UserList";
 
 const axios = require("axios");
 
-class Home extends Component {
+class NowPlaying extends Component {
     render() {
-        console.log("Home");
-        return (
-            <div>
-                <h1>Home</h1>
-            </div>
-        );
-    }
-}
-
-class LoginForm extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            username: "",
-            password: ""
-        };
-
-        this.handleInputChange = this.handleInputChange.bind(this);
-    }
-
-    handleInputChange(event) {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
-
-        this.setState({
-            [name]: value
-        });
-    }
-
-    handleSubmit(e) {
-        e.preventDefault();
-        this.props.postCreds(this.state.username, this.state.password);
-    }
-
-    render() {
-        return (
-            <form onSubmit={e => this.handleSubmit(e)}>
-                <label>
-                    Username:
-                    <input
-                        name="username"
-                        type="text"
-                        onChange={this.handleInputChange}
-                    />
-                </label>
-                <label>
-                    Password:
-                    <input
-                        name="password"
-                        type="password"
-                        onChange={this.handleInputChange}
-                    />
-                </label>
-                <input type="submit" value="submit" />
-            </form>
-        );
-    }
-}
-
-class Checker extends Component {
-    render() {
-        let checker_class = 0;
-        if (this.props.type == 2) {
-            checker_class = "red-checker";
-        } else if (this.props.type == 3) {
-            checker_class = "black-checker";
+        if (this.props.now_playing == 0) {
+            return <Redirect to='/game' />
+        } else {
+            return <Redirect to={'/game/'+this.props.now_playing} />
         }
-        return <div className={checker_class} />;
-    }
-}
-
-class BoardSquare extends Component {
-    render() {
-        let bg_class = "board-square black-square";
-        if (this.props.square == 0) {
-            bg_class = "board-square white-square";
-        }
-
-        let checker = null;
-        if (this.props.square > 1) {
-            checker = <Checker type={this.props.square} />;
-        }
-
-        return (
-            <Col xs={1} className={bg_class}>
-                {checker}
-            </Col>
-        );
-    }
-}
-
-class Board extends Component {
-    render() {
-        return (
-            <Container>
-                {this.props.boardState.map(row => (
-                    <Row className="checker-row">
-                        {row.map(sq => (
-                            <BoardSquare square={sq} />
-                        ))}
-                    </Row>
-                ))}
-            </Container>
-        );
     }
 }
 
@@ -126,15 +27,16 @@ class App extends Component {
         super(props);
         this.state = {
             key: "",
+            now_playing: 0,
             board: [
-                [0, 2, 0, 1, 0, 1, 0, 1],
+                [0, 4, 0, 1, 0, 1, 0, 1],
                 [1, 0, 1, 0, 2, 0, 1, 0],
                 [0, 1, 0, 1, 0, 1, 0, 1],
                 [1, 0, 1, 0, 1, 0, 3, 0],
                 [0, 1, 0, 1, 0, 1, 0, 1],
                 [1, 0, 1, 0, 3, 0, 1, 0],
                 [0, 1, 0, 1, 0, 3, 0, 1],
-                [1, 0, 1, 0, 3, 0, 3, 0]
+                [1, 0, 5, 0, 3, 0, 3, 0]
             ]
         };
     }
@@ -193,28 +95,30 @@ class App extends Component {
                             </Nav>
                         </Navbar>
 
-                        <Route path="/game/" render={props => <GameList />} />
-
-                        <Route
+                        <Route 
                             exact
-                            path="/"
+                            path="/" 
                             render={props => (
-                                <Board
+                                <NowPlaying
+                                    {...props}
+                                    now_playing={ this.state.now_playing }
+                                    boardState={ this.state.board }
+                                />
+                            )}
+                        />
+
+                        <Route exact path="/game/" render={props => <GameList />} />
+
+                        <Route 
+                            path="/game/:id" 
+                            render={props => (
+                                <Game
                                     {...props}
                                     boardState={this.state.board}
                                 />
                             )}
                         />
                         <Route path="/users/" component={UserList} />
-                        <Route
-                            path="/login"
-                            render={props => (
-                                <LoginForm
-                                    {...props}
-                                    postCreds={this.postCreds}
-                                />
-                            )}
-                        />
                     </div>
                 </Router>
             </div>

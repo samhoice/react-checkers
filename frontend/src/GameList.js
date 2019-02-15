@@ -8,7 +8,7 @@ const axios = require("axios");
 class GameListItem extends Component {
     render() {
         return (
-            <Link to="/">
+            <Link to={ "/game/" + this.props.game.id }>
                 <Row>
                     <Col>{this.props.game.id}</Col>
                     <Col>{this.props.game.created}</Col>
@@ -24,10 +24,11 @@ class GameList extends Component {
         this.state = {
             gameList: []
         };
-        this.procResponse = this.procResponse.bind(this);
+        this.processList = this.processList.bind(this);
+        this.processListItem = this.processListItem.bind(this);
     }
 
-    procResponse(response) {
+    processList(response) {
         if (response.data.count == 0) {
             this.setState({ gameList: [] });
         } else {
@@ -36,11 +37,16 @@ class GameList extends Component {
         }
     }
 
+    processListItem(response) {
+        const gameList = this.state.gameList.concat([response.data])
+        this.setState({ gameList: gameList });
+    }
+
     componentDidMount() {
         axios
             .get("/skele/api/games")
             .then(response => {
-                this.procResponse(response);
+                this.processList(response);
             })
             .catch(function(error) {
                 console.log(error);
@@ -61,8 +67,8 @@ class GameList extends Component {
                     xsrfHeaderName: "X-CSRFToken"
                 }
             )
-            .then(function(response) {
-                console.log(response);
+            .then(response => {
+                this.processListItem(response);
             })
             .catch(function(error) {
                 console.log(error);

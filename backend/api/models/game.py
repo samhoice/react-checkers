@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 
 class Game(models.Model):
      black_player = models.ForeignKey(User, 
@@ -12,9 +13,14 @@ class Game(models.Model):
              related_name='w_player_set')
      created = models.DateTimeField(auto_now_add = True)
 
+def create_board(sender, instance, **kwargs):
+    Board.objects.create(game=instance)
+
+post_save.connect(create_board, sender=Game)
+
 class Board(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    layout = models.CharField(max_length=64, default="B"*12 + " "*8 + "W"*12)
+    layout = models.CharField(max_length=64, default="b"*12 + " "*8 + "w"*12)
 
     adjacency_matrix = {
         0:  {'b': (),       'f': (4)},

@@ -22,6 +22,7 @@ from api import views
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'games', views.GameViewSet, basename='game')
+router.register(r'board', views.BoardViewSet, basename='board')
 
 authpatterns = [
         path(

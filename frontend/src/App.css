@@ -64,25 +64,50 @@
 
 /* Checkers */
 .black-square {
-    background-color: #404050;
+    background-color: #606070;
 }
 .white-square {
-    background-color: #eeeefe;
+    background-color: #eeeee7;
+}
+
+.checker {
+    border-radius: 48%;
+    margin: 10%;
+    width: 80%;
+    height: 80%;
 }
 
 .red-checker {
-    border-radius: 48%;
-    margin: 10%;
-    width: 80%;
-    height: 80%;
-    background-color: #993333;
-    align-items: center;
+    background-color: #802020;
 }
 
 .black-checker {
-    border-radius: 48%;
-    margin: 10%;
-    width: 80%;
-    height: 80%;
-    background-color: #000000;
+    background-color: #000009;
 }
+
+.bar {
+    margin: 0 auto;
+    position: absolute;
+    background-color: #FFFFFF;
+    border-radius: 20%;
+    visibility: hidden;
+}
+
+.horizontal {
+    width: 60%;
+    height: 10%;
+    left: 20%;
+    top: 45%;
+}
+
+.vertical {
+    width: 10%;
+    height: 60%;
+    left: 45%;
+    top: 20%;
+}
+
+.king .bar {
+    visibility: visible
+}
+
