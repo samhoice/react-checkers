@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { HashRouter as Router, Route, Link } from "react-router-dom";
-import Cookies from "js-cookie";
+import { HashRouter as Link } from "react-router-dom";
 
 const axios = require("axios");
 
@@ -29,7 +28,7 @@ class GameList extends Component {
     }
 
     processList(response) {
-        if (response.data.count == 0) {
+        if (response.data.count === 0) {
             this.setState({ gameList: [] });
         } else {
             const gameList = response.data.results.slice();
@@ -55,8 +54,6 @@ class GameList extends Component {
 
     createGame(e) {
         e.preventDefault();
-
-        const csrf = Cookies.get("csrftoken");
 
         axios
             .post(

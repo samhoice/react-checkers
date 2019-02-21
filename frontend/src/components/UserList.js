@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { HashRouter as Router, Route, Link } from "react-router-dom";
-import { ListGroup, Navbar, Nav, NavItem } from "react-bootstrap";
+import { ListGroup } from "react-bootstrap";
 
 const axios = require("axios");
 

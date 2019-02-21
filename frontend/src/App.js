@@ -1,23 +1,18 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
 import "./App.css";
-import Cookies from "js-cookie";
-import { Container, Row, Col } from "react-bootstrap";
-import { ListGroup, Navbar, Nav, NavItem } from "react-bootstrap";
-import { HashRouter as Router, Route, Link, Redirect } from "react-router-dom";
+import { Navbar, Nav, NavItem } from "react-bootstrap";
+import { HashRouter as Router, Route, Redirect } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
-import { GameList } from "./GameList";
-import { Game } from "./Game";
-import { UserList } from "./UserList";
-
-const axios = require("axios");
+import { GameList } from "./components/GameList";
+import { Game } from "./components/Game";
+import { UserList } from "./components/UserList";
 
 class NowPlaying extends Component {
     render() {
-        if (this.props.now_playing == 0) {
-            return <Redirect to='/game' />
+        if (this.props.now_playing === 0) {
+            return <Redirect to="/game" />;
         } else {
-            return <Redirect to={'/game/'+this.props.now_playing} />
+            return <Redirect to={"/game/" + this.props.now_playing} />;
         }
     }
 }
@@ -28,51 +23,30 @@ class App extends Component {
         this.state = {
             key: "",
             now_playing: 0,
+            active: "",
             board: [
-                [0, 4, 0, 1, 0, 1, 0, 1],
-                [1, 0, 1, 0, 2, 0, 1, 0],
+                [1, 0, 1, 0, 1, 0, 1, 0],
                 [0, 1, 0, 1, 0, 1, 0, 1],
-                [1, 0, 1, 0, 1, 0, 3, 0],
+                [1, 0, 1, 0, 1, 0, 1, 0],
                 [0, 1, 0, 1, 0, 1, 0, 1],
-                [1, 0, 1, 0, 3, 0, 1, 0],
-                [0, 1, 0, 1, 0, 3, 0, 1],
-                [1, 0, 5, 0, 3, 0, 3, 0]
+                [1, 0, 1, 0, 1, 0, 1, 0],
+                [0, 1, 0, 1, 0, 1, 0, 1],
+                [1, 0, 1, 0, 1, 0, 1, 0],
+                [0, 1, 0, 1, 0, 1, 0, 1]
             ]
         };
         this.processGameData = this.processGameData.bind(this);
+        this.onSquareClick = this.onSquareClick.bind(this);
     }
-
 
     processGameData(response) {
-        this.setState({board: response.data.board_set[0].layout.slice()});
+        this.setState({ now_playing: response.data.id });
+        this.setState({ board: response.data.board_set[0].layout.slice() });
     }
 
-    // TODO: Change this to use session auth and log in through the regular
-    // django login
-    //
-    postCreds(username, password) {
-        const csrf = Cookies.get("csrftoken");
-        axios
-            .post(
-                "/skele/rest-auth/login/",
-                {
-                    username: username,
-                    email: "",
-                    password: password
-                },
-                {
-                    headers: {
-                        "X-CSRFTOKEN": csrf
-                    }
-                }
-            )
-            .then(function(response) {
-                console.log(response);
-            })
-            .catch(function(error) {
-                console.log(error);
-            });
-        // TODO: save state
+    onSquareClick(id) {
+        console.log("onSquareClick " + id);
+        this.setState({ active: id.slice() });
     }
 
     render() {
@@ -101,27 +75,33 @@ class App extends Component {
                             </Nav>
                         </Navbar>
 
-                        <Route 
+                        <Route
                             exact
-                            path="/" 
+                            path="/"
                             render={props => (
                                 <NowPlaying
                                     {...props}
-                                    now_playing={ this.state.now_playing }
-                                    boardState={ this.state.board }
+                                    now_playing={this.state.now_playing}
+                                    boardState={this.state.board}
                                 />
                             )}
                         />
 
-                        <Route exact path="/game/" render={props => <GameList />} />
+                        <Route
+                            exact
+                            path="/game/"
+                            render={props => <GameList />}
+                        />
 
-                        <Route 
-                            path="/game/:id" 
+                        <Route
+                            path="/game/:id"
                             render={props => (
                                 <Game
                                     {...props}
                                     boardState={this.state.board}
-                                    processGameData = {this.processGameData}
+                                    processGameData={this.processGameData}
+                                    onSquareClick={this.onSquareClick}
+                                    active={this.state.active}
                                 />
                             )}
                         />
