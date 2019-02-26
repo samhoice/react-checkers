@@ -1,21 +1,27 @@
 import React, { Component } from "react";
 import { Container, Row } from "react-bootstrap";
+import {connect } from 'react-redux'
 import ClickableBoardSquare from '../containers/ClickableBoardSquare'
-//import { BoardSquare, Checker } from './BoardSquare'
-
+import { getCurrentBoard } from '../actions'
 const axios = require("axios");
 
+const mapStateToProps = state => {
+    return {
+        boardState: state.boardLayout.layout
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        getBoard: id => {
+            dispatch(getCurrentBoard(id))
+        }
+    }
+}
+
 class Game extends Component {
-    componentDidMount() {
-        var url = "/skele/api/games/" + this.props.match.params.id;
-        axios
-            .get(url)
-            .then(response => {
-                this.props.processGameData(response);
-            })
-            .catch(error => {
-                console.log(error);
-            });
+    componentWillMount() {
+        this.props.getBoard(this.props.match.params.id)
     }
 
     render() {
@@ -24,8 +30,6 @@ class Game extends Component {
                 Game {this.props.match.params.id}
                 <Board
                     boardState={this.props.boardState}
-                    onSquareClick={this.props.onSquareClick}
-                    active={this.props.active}
                 />
             </div>
         );
@@ -34,7 +38,6 @@ class Game extends Component {
 
 class Board extends Component {
     render() {
-        console.log("board render");
         var board = this.props.boardState.slice();
         board.reverse();
         return (
@@ -46,8 +49,6 @@ class Board extends Component {
                                 key={"" + j.toString() + (7 - i).toString()}
                                 id={"UI-" + j.toString() + (7 - i).toString()}
                                 square={sq}
-                                active={this.props.active}
-                                onSquareClick={this.props.onSquareClick}
                             />
                         ))}
                     </Row>
@@ -57,4 +58,8 @@ class Board extends Component {
     }
 }
 
-export { Game };
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Game)
+

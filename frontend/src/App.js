@@ -4,7 +4,7 @@ import { Navbar, Nav, NavItem } from "react-bootstrap";
 import { HashRouter as Router, Route, Redirect } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { GameList } from "./components/GameList";
-import { Game } from "./components/Game";
+import Game from "./components/Game";
 import { UserList } from "./components/UserList";
 
 class NowPlaying extends Component {
@@ -21,32 +21,8 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            key: "",
             now_playing: 0,
-            active: "",
-            board: [
-                [1, 0, 1, 0, 1, 0, 1, 0],
-                [0, 1, 0, 1, 0, 1, 0, 1],
-                [1, 0, 1, 0, 1, 0, 1, 0],
-                [0, 1, 0, 1, 0, 1, 0, 1],
-                [1, 0, 1, 0, 1, 0, 1, 0],
-                [0, 1, 0, 1, 0, 1, 0, 1],
-                [1, 0, 1, 0, 1, 0, 1, 0],
-                [0, 1, 0, 1, 0, 1, 0, 1]
-            ]
         };
-        this.processGameData = this.processGameData.bind(this);
-        this.onSquareClick = this.onSquareClick.bind(this);
-    }
-
-    processGameData(response) {
-        this.setState({ now_playing: response.data.id });
-        this.setState({ board: response.data.board_set[0].layout.slice() });
-    }
-
-    onSquareClick(id) {
-        console.log("onSquareClick " + id);
-        this.setState({ active: id.slice() });
     }
 
     render() {
@@ -98,10 +74,6 @@ class App extends Component {
                             render={props => (
                                 <Game
                                     {...props}
-                                    boardState={this.state.board}
-                                    processGameData={this.processGameData}
-                                    onSquareClick={this.onSquareClick}
-                                    active={this.state.active}
                                 />
                             )}
                         />

@@ -70,6 +70,10 @@
     background-color: #eeeee7;
 }
 
+.active.board-square {
+    border: 4px solid gold;
+}
+
 .checker {
     border-radius: 48%;
     margin: 10%;

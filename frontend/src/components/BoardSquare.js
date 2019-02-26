@@ -4,14 +4,11 @@ import { Checker } from './Checker'
 
 class BoardSquare extends Component {
     render() {
-        console.log("board square render")
         let bg_class = "board-square black-square";
         if (this.props.square === 0) {
             bg_class = "board-square white-square";
         }
-        //console.log(
-        //    "compare active: " + this.props.activeSquare + " " + this.props.id
-        //);
+
         if (this.props.activeSquare === this.props.id) {
             bg_class = bg_class + " active";
         }

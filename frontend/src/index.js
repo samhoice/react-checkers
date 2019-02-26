@@ -4,13 +4,22 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux'
-import { createStore } from 'redux'
-import checkersGame from './reducers'
+import { createStore, compose, applyMiddleware } from 'redux'
+import createSagaMiddleware from 'redux-saga'
+
+import rootSaga from './sagas'
+import rootReducer from './reducers'
+
+const sagaMiddleware = createSagaMiddleware()
+
+const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 const store = createStore(
-    checkersGame, 
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    rootReducer, 
+    composeEnhancer(applyMiddleware(sagaMiddleware)),
 )
+
+sagaMiddleware.run(rootSaga)
 
 ReactDOM.render(
     <Provider store={store}>

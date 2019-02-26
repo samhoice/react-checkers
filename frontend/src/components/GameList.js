@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { HashRouter as Link } from "react-router-dom";
+import { HashRouter as Router, Route, Link } from "react-router-dom";
 
 const axios = require("axios");
 
@@ -41,7 +41,7 @@ class GameList extends Component {
         this.setState({ gameList: gameList });
     }
 
-    componentDidMount() {
+    componentWillMount() {
         axios
             .get("/skele/api/games")
             .then(response => {
