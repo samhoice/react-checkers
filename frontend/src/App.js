@@ -1,28 +1,28 @@
-import React, { Component } from "react";
-import "./App.css";
-import { Navbar, Nav, NavItem } from "react-bootstrap";
-import { HashRouter as Router, Route, Redirect } from "react-router-dom";
-import { LinkContainer } from "react-router-bootstrap";
-import { GameList } from "./components/GameList";
-import Game from "./components/Game";
-import { UserList } from "./components/UserList";
+import React, { Component } from "react"
+import "./App.css"
+import { Navbar, Nav, NavItem } from "react-bootstrap"
+import { HashRouter as Router, Route, Redirect } from "react-router-dom"
+import { LinkContainer } from "react-router-bootstrap"
+import { GameList } from "./components/GameList"
+import Game from "./components/Game"
+import { UserList } from "./components/UserList"
 
 class NowPlaying extends Component {
     render() {
         if (this.props.now_playing === 0) {
-            return <Redirect to="/game" />;
+            return <Redirect to="/game" />
         } else {
-            return <Redirect to={"/game/" + this.props.now_playing} />;
+            return <Redirect to={"/game/" + this.props.now_playing} />
         }
     }
 }
 
 class App extends Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
-            now_playing: 0,
-        };
+            now_playing: 0
+        }
     }
 
     render() {
@@ -71,18 +71,14 @@ class App extends Component {
 
                         <Route
                             path="/game/:id"
-                            render={props => (
-                                <Game
-                                    {...props}
-                                />
-                            )}
+                            render={props => <Game {...props} />}
                         />
                         <Route path="/users/" component={UserList} />
                     </div>
                 </Router>
             </div>
-        );
+        )
     }
 }
 
-export default App;
+export default App

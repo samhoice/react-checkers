@@ -1,9 +1,8 @@
-import React, { Component } from "react";
-import { Container, Row } from "react-bootstrap";
-import {connect } from 'react-redux'
-import ClickableBoardSquare from '../containers/ClickableBoardSquare'
-import { getCurrentBoard } from '../actions'
-const axios = require("axios");
+import React, { Component } from "react"
+import { Container, Row } from "react-bootstrap"
+import { connect } from "react-redux"
+import ClickableBoardSquare from "../containers/ClickableBoardSquare"
+import { getCurrentBoard } from "../actions"
 
 const mapStateToProps = state => {
     return {
@@ -28,18 +27,17 @@ class Game extends Component {
         return (
             <div>
                 Game {this.props.match.params.id}
-                <Board
-                    boardState={this.props.boardState}
-                />
+                <Board boardState={this.props.boardState} />
             </div>
-        );
+        )
     }
 }
 
 class Board extends Component {
     render() {
-        var board = this.props.boardState.slice();
-        board.reverse();
+        var board = this.props.boardState.slice()
+        // Draw the board from the top down
+        board.reverse()
         return (
             <Container>
                 {board.map((row, i) => (
@@ -54,7 +52,7 @@ class Board extends Component {
                     </Row>
                 ))}
             </Container>
-        );
+        )
     }
 }
 
@@ -62,4 +60,3 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(Game)
-

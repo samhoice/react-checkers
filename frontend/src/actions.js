@@ -1,7 +1,11 @@
-export const SET_ACTIVE_SQUARE = "SET_ACTIVE_SQUARE"
 export const BOARD_REQUESTED = "BOARD_REQUESTED"
 export const BOARD_RECEIVE_SUCCESS = "BOARD_RECEIVE_SUCCESS"
 export const BOARD_RECEIVE_FAILURE = "BOARD_RECEIVE_FAILURE"
+
+export const SET_ACTIVE_SQUARE = "SET_ACTIVE_SQUARE"
+export const MOVE_REQUESTED = "MOVE_REQUESTED"
+export const MOVE_REQUEST_SUCCESS = "MOVE_REQUEST_SUCCESS"
+export const MOVE_REQUEST_FAILURE = "MOVE_REQUEST_FAILURE"
 
 export function setActiveSquare(id) {
     return { type: SET_ACTIVE_SQUARE, id }
@@ -18,4 +22,17 @@ export function boardReceiveSuccess(board) {
 
 export function boardReceiveFail(e) {
     return { type: BOARD_RECEIVE_FAILURE, e }
+}
+
+/* making a move */
+export function makeMove(game_id, path) {
+    return { type: MOVE_REQUESTED, move: { game_id: game_id, path: path } }
+}
+
+export function moveSuccess(path) {
+    return { type: MOVE_REQUEST_SUCCESS, path }
+}
+
+export function moveFail(e) {
+    return { type: MOVE_REQUEST_FAILURE, e }
 }

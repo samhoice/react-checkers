@@ -1,3 +1,3 @@
-from .game import (Game, 
-        Board, 
-        Move)
+from .game import (Game,
+                   Board,
+                   Move)

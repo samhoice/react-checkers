@@ -1,24 +1,24 @@
-import { connect } from "react-redux";
-import { setActiveSquare } from "../actions";
-import { BoardSquare } from "../components/BoardSquare.js";
+import { connect } from "react-redux"
+import { setActiveSquare } from "../actions"
+import { BoardSquare } from "../components/BoardSquare.js"
 
 const mapStateToProps = state => {
     return {
         activeSquare: state.activeSquare
-    };
-};
+    }
+}
 
 const mapDispatchToProps = dispatch => {
     return {
         onBoardClick: id => {
-            dispatch(setActiveSquare(id));
+            dispatch(setActiveSquare(id))
         }
-    };
-};
+    }
+}
 
 const ClickableBoardSquare = connect(
     mapStateToProps,
-    mapDispatchToProps 
-)(BoardSquare);
+    mapDispatchToProps
+)(BoardSquare)
 
-export default ClickableBoardSquare;
+export default ClickableBoardSquare

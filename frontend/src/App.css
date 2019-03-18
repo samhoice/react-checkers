@@ -79,6 +79,9 @@
     margin: 10%;
     width: 80%;
     height: 80%;
+} 
+.active.checker {
+    border: 4px solid green;
 }
 
 .red-checker {

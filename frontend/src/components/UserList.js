@@ -1,39 +1,38 @@
-import React, { Component } from "react";
-import { Container, Row, Col } from "react-bootstrap";
-import { ListGroup } from "react-bootstrap";
+import React, { Component } from "react"
+import { Container, Row, Col } from "react-bootstrap"
+import { ListGroup } from "react-bootstrap"
 
-const axios = require("axios");
-
+const axios = require("axios")
 
 class UserListItem extends Component {
     render() {
-        return <ListGroup.Item>{this.props.user.username}</ListGroup.Item>;
+        return <ListGroup.Item>{this.props.user.username}</ListGroup.Item>
     }
 }
 
 class UserList extends Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             userList: []
-        };
-        this.procResponse = this.procResponse.bind(this);
+        }
+        this.procResponse = this.procResponse.bind(this)
     }
 
     procResponse(response) {
-        const userList = response.data.results.slice();
-        this.setState({ userList: userList });
+        const userList = response.data.results.slice()
+        this.setState({ userList: userList })
     }
 
     componentDidMount() {
         axios
             .get("/skele/api/users/")
             .then(response => {
-                this.procResponse(response);
+                this.procResponse(response)
             })
             .catch(function(error) {
-                console.log(error);
-            });
+                console.log(error)
+            })
     }
 
     render() {
@@ -54,8 +53,8 @@ class UserList extends Component {
                     </Row>
                 </Container>
             </div>
-        );
+        )
     }
 }
 
-export { UserList };
+export { UserList }
