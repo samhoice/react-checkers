@@ -18,6 +18,10 @@ class BoardSquare extends Component {
             checker = <Checker type={this.props.square} />
         }
 
+        let number = this.props.id.split("-")[1]
+        let xy = number.split('')
+
+        let sq_num = parseInt(xy[1])*4 + Math.floor(parseInt(xy[0])/2)
         return (
             <Col
                 xs={1}
@@ -30,6 +34,7 @@ class BoardSquare extends Component {
                 }
             >
                 {checker}
+                {this.props.square ? sq_num : ""}
             </Col>
         )
     }

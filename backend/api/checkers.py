@@ -152,7 +152,7 @@ class Checkers:
         return layout[position].isupper()
 
     @classmethod
-    def validPiece(cls, layout, piece, move):
+    def validPiece(cls, piece, layout, move):
         if piece < 0 or piece > 31:
             return False
         if move < 0:
@@ -181,9 +181,9 @@ class Checkers:
         return cls.adjacency_matrix[position][direction][1]
 
     @classmethod
-    def isOpponent(cls, color, piece, layout):
-        square = cls.getColorAt(piece, layout)
-        if square == color.lower() or square != cls.Pieces.NONE:
+    def isOpponent(cls, color, position, layout):
+        square = cls.getColorAt(position, layout)
+        if square == cls.Pieces.NONE or color == square.lower():
             return False
         else:
             return True
@@ -205,13 +205,13 @@ class Checkers:
             landing_sq = cls.adjacency_matrix[target][cls.BACK][cls.RIGHT]
 
         # check if there's an unoccupied square to land in
-        if landing_sq == cls.Pieces.NONE:
+        if cls.getColorAt(landing_sq, layout) == cls.Pieces.NONE:
             return landing_sq
 
         return None
 
     @classmethod
-    def getLegalMoves(cls, layout, piece):
+    def getLegalMoves(cls, piece, layout):
         """ Gets the legal moves for a piece on the board
         """
         color = cls.getColorAt(piece, layout)
@@ -223,9 +223,9 @@ class Checkers:
         unfiltered_moves = []
 
         if cls.isKing(piece, layout):
-            left, right = cls.adjacency_matrix[piece]['f']
-            unfiltered_moves.extend([left, right])
             left, right = cls.adjacency_matrix[piece]['b']
+            unfiltered_moves.extend([left, right])
+            left, right = cls.adjacency_matrix[piece]['f']
             unfiltered_moves.extend([left, right])
         else:
             left, right = cls.getMoves(piece, direction)
@@ -251,7 +251,7 @@ class Checkers:
             jumps = list(filter(lambda x: x, unfiltered_jumps))
             # we don't care about moves if we have jumps
             if jumps:
-                return jumps
+                return {'jumps': jumps}
 
         # if we got here, process moves
         moves = list(
@@ -264,13 +264,18 @@ class Checkers:
 
     @classmethod
     def getAllLegalMoves(cls, layout, move):
+        has_jumps = False
         all_moves = {}
         for i, piece in enumerate(layout):
-            if cls.validPiece(layout, i, move):
-                moves_for_square = cls.getLegalMoves(layout, i)
+            if cls.validPiece(i, layout, move):
+                moves_for_square = cls.getLegalMoves(i, layout)
                 if 'jumps' in moves_for_square:
+                    if not has_jumps:
+                        all_moves = {}
+                        has_jumps = True
                     all_moves[i] = moves_for_square
-                elif moves_for_square['moves']:
+
+                elif not has_jumps and moves_for_square['moves']:
                     all_moves[i] = moves_for_square
 
         return all_moves
@@ -281,7 +286,7 @@ class Checkers:
         I suppose that I should test for a valid move before I go about
         moving pieces all willy-nilly.
         """
-        legal_moves = getLegalMoves(layout, start)
+        legal_moves = getLegalMoves(start, layout)
         if end in legal_moves:
             piece = layout[start]
             new_layout = layout[0:start] + "1" + layout[start+1:]
@@ -342,11 +347,12 @@ if __name__ == "__main__":
     elif args.command == "moves":
         if args.piece.rstrip() == 'all':
             print(Checkers.getAllLegalMoves(layout, move))
-        elif not Checkers.validPiece(layout, int(args.piece), move):
+        elif not Checkers.validPiece(int(args.piece), layout, move):
             print("You can't move that piece")
         else:
-            print(Checkers.getLegalMoves(layout, int(args.piece)))
+            print(Checkers.getLegalMoves(int(args.piece), layout))
 
     else:
         # never gets here because the parser throws an error
-        print("Invalid command: {}".format(args.command))
+        Print("Invalid command: {}".format(args.command))
+        irint("canJump: {}".format(landing_sq))
