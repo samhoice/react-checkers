@@ -32,3 +32,33 @@ def test_jumps_and_moves(jump_layout):
 
 def test_jumps(jump_layout):
     assert(Checkers.getLegalMoves(5, jump_layout)['jumps'] == [12])
+
+def test_make_move(sparse_layout):
+    start_layout = "b                               "
+    finish_layout = "    b                           "
+    assert(Checkers.movePiece(start_layout, 0, 4) == finish_layout)
+
+    start_layout = "b   b                           "
+    finish_layout= "b       b                       "
+    assert(Checkers.movePiece(start_layout, 4, 8) == finish_layout)
+
+    start_layout = "b   b                     w     "
+    finish_layout= "b   b                w          "
+    assert(Checkers.movePiece(start_layout, 26, 21) == finish_layout)
+
+def test_make_jump():
+    start_layout =  "b   w                           "
+    finish_layout = "         b                      "
+    assert(Checkers.jumpPiece(start_layout, 0, 9) == finish_layout)
+
+    start_layout =  " b  w                           "
+    finish_layout = "        b                       "
+    assert(Checkers.jumpPiece(start_layout, 1, 8) == finish_layout)
+
+    start_layout =  " b  w       b    w              "
+    finish_layout = " b  w   w                       "
+    assert(Checkers.jumpPiece(start_layout, 17, 8) == finish_layout)
+
+    start_layout =  " b  w        b   w              "
+    finish_layout = " b  w     w                     "
+    assert(Checkers.jumpPiece(start_layout, 17, 10) == finish_layout)

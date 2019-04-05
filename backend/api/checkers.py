@@ -128,7 +128,7 @@ class Checkers:
     base_layout = "bbbbbbbbbbbb        wwwwwwwwwwww"
 
     @classmethod
-    def toGrid(cls, layout, reverse=False):
+    def _toGrid(cls, layout, reverse=False):
         if reverse:
             layout = layout[::-1]
         board = [[0 for x in range(8)] for y in range(8)]
@@ -138,17 +138,17 @@ class Checkers:
         return(board)
 
     @classmethod
-    def colorCurrentlyMoving(cls, move):
+    def _colorCurretlyMoving(cls, move):
         if move % 2:
             return cls.Pieces.RED
         else:
             return cls.Pieces.BLACK
 
     @staticmethod
-    def getColorAt(position, layout):
+    def _getColorAt(position, layout):
         return layout[position].lower()
 
-    def isKing(position, layout):
+    def _isKing(position, layout):
         return layout[position].isupper()
 
     @classmethod
@@ -158,38 +158,38 @@ class Checkers:
         if move < 0:
             return None
 
-        color = cls.getColorAt(piece, layout)
+        color = cls._getColorAt(piece, layout)
 
         if (color != cls.Pieces.NONE and
-                color == cls.colorCurrentlyMoving(move)):
+                color == cls._colorCurretlyMoving(move)):
             return True
 
         return False
 
     @classmethod
-    def getMoves(cls, position, direction):
+    def _getMoves(cls, position, direction):
         """ adjacency matrix lookup
         """
         return cls.adjacency_matrix[position][direction]
 
     @classmethod
-    def getLeftOf(cls, position, direction='f'):
+    def _getLeftOf(cls, position, direction='f'):
         return cls.adjacency_matrix[position][direction][0]
 
     @classmethod
-    def getRightOf(cls, position, direction='f'):
+    def _getRightOf(cls, position, direction='f'):
         return cls.adjacency_matrix[position][direction][1]
 
     @classmethod
-    def isOpponent(cls, color, position, layout):
-        square = cls.getColorAt(position, layout)
+    def _isOpponent(cls, color, position, layout):
+        square = cls._getColorAt(position, layout)
         if square == cls.Pieces.NONE or color == square.lower():
             return False
         else:
             return True
 
     @classmethod
-    def canJump(cls, target, piece, layout):
+    def _canJump(cls, target, piece, layout):
         """ returns the landing for the jump or None
         """
         # figure out the jump direction. Assume that the target is
@@ -205,7 +205,7 @@ class Checkers:
             landing_sq = cls.adjacency_matrix[target][cls.BACK][cls.RIGHT]
 
         # check if there's an unoccupied square to land in
-        if cls.getColorAt(landing_sq, layout) == cls.Pieces.NONE:
+        if cls._getColorAt(landing_sq, layout) == cls.Pieces.NONE:
             return landing_sq
 
         return None
@@ -214,7 +214,7 @@ class Checkers:
     def getLegalMoves(cls, piece, layout):
         """ Gets the legal moves for a piece on the board
         """
-        color = cls.getColorAt(piece, layout)
+        color = cls._getColorAt(piece, layout)
         if color == 'w':
             direction = 'b'
         else:
@@ -222,13 +222,13 @@ class Checkers:
 
         unfiltered_moves = []
 
-        if cls.isKing(piece, layout):
+        if cls._isKing(piece, layout):
             left, right = cls.adjacency_matrix[piece]['b']
             unfiltered_moves.extend([left, right])
             left, right = cls.adjacency_matrix[piece]['f']
             unfiltered_moves.extend([left, right])
         else:
-            left, right = cls.getMoves(piece, direction)
+            left, right = cls._getMoves(piece, direction)
             unfiltered_moves.extend([left, right])
 
         # remove None destinations from the list (board edges)
@@ -237,7 +237,7 @@ class Checkers:
         # move destination is an opponent
         possible_jumps = list(
             filter(
-                lambda x: cls.isOpponent(color, x, layout),
+                lambda x: cls._isOpponent(color, x, layout),
                 filtered_moves
             )
         )
@@ -247,7 +247,7 @@ class Checkers:
             # TODO for each jump, find the direction and then go two hops
             # and look for an empty square.
             unfiltered_jumps = list(
-                map(lambda x: cls.canJump(x, piece, layout), possible_jumps))
+                map(lambda x: cls._canJump(x, piece, layout), possible_jumps))
             jumps = list(filter(lambda x: x, unfiltered_jumps))
             # we don't care about moves if we have jumps
             if jumps:
@@ -256,11 +256,24 @@ class Checkers:
         # if we got here, process moves
         moves = list(
             filter(
-                lambda x: cls.Pieces.NONE == cls.getColorAt(x, layout),
+                lambda x: cls.Pieces.NONE == cls._getColorAt(x, layout),
                 filtered_moves
             )
         )
         return {'moves': list(moves)}
+
+    @classmethod
+    def XYToIdx(cls, pos):
+        """ returns the index position from the X, Y coord
+        """
+        print("{}".format(pos))
+        return cls.rev_pos_mapping[int(pos[0])][int(pos[1])]
+
+    @classmethod
+    def IdxToXY(cls, idx):
+        pos = cls.pos_mapping[int(idx)]
+
+        return "{}{}".format(pos[0], pos[1])
 
     @classmethod
     def getAllLegalMoves(cls, layout, move):
@@ -280,21 +293,47 @@ class Checkers:
 
         return all_moves
 
+    @classmethod
     def movePiece(cls, layout, start, end):
         """ Moves a piece
 
         I suppose that I should test for a valid move before I go about
         moving pieces all willy-nilly.
         """
-        legal_moves = getLegalMoves(start, layout)
-        if end in legal_moves:
+        legal_moves = cls.getLegalMoves(start, layout)
+        if end in legal_moves['moves']:
             piece = layout[start]
-            new_layout = layout[0:start] + "1" + layout[start+1:]
-            new_layout = layout[0:end] + piece + layout[end+1:]
+            new_layout = layout[0:start] + " " + layout[start+1:]
+            new_layout = new_layout[0:end] + piece + new_layout[end+1:]
             return new_layout
         return None
 
-        
+    @classmethod
+    def jumpPiece(cls, layout, start, end):
+        legal_moves = cls.getLegalMoves(start, layout)
+        print("{}".format(legal_moves))
+        if end in legal_moves['jumps']:
+            piece = layout[start]
+            d = start - end
+            # forwards or back
+            fb = cls.FORWARD if (start < end) else cls.BACK
+            # jumped square
+            if fb == cls.FORWARD and abs(d) == 9:
+                lr = cls.RIGHT
+            elif fb == cls.BACK and abs(d) == 7:
+                lr = cls.RIGHT
+            else:
+                lr = cls.LEFT
+            jumped_sq = cls.adjacency_matrix[start][fb][lr]
+            print("jump: {} for:{} right:{}".format(jumped_sq, fb == cls.FORWARD, lr == cls.RIGHT))
+            new_layout = layout[0:start] + " " + layout[start+1:]
+            new_layout = new_layout[0:jumped_sq] + " " + new_layout[jumped_sq+1:]
+            new_layout = new_layout[0:end] + piece + new_layout[end+1:]
+            print(layout)
+            print(new_layout)
+            return new_layout
+        return None
+
 
 if __name__ == "__main__":
     import argparse
@@ -330,16 +369,20 @@ if __name__ == "__main__":
         move = 0
 
     if args.command == "show":
-        if args.what == "all" or args.what == "move":
+        if args.what == "move":
             print("Move: {}".format(move))
-        if args.what == "all" or args.what == "board":
-            board = Checkers.toGrid(layout, args.reverse)
+        elif args.what == "all" or args.what == "board":
+            if args.what == "all":
+                print("Move: {}".format(move))
+            board = Checkers._toGrid(layout, args.reverse)
             if args.reverse:
                 print("Board Reversed")
             # reverse the board for printing
             # board is printed top to bottom, stored bottom to top
             board.reverse()
             pprint.pprint(board)
+        else:
+            print("Invalid target")
     elif args.command == "new":
         f = open(args.new_file, 'w')
         f.write("{}\n".format(Checkers.base_layout))
@@ -354,5 +397,5 @@ if __name__ == "__main__":
 
     else:
         # never gets here because the parser throws an error
-        Print("Invalid command: {}".format(args.command))
-        irint("canJump: {}".format(landing_sq))
+        print("Invalid command: {}".format(args.command))
+

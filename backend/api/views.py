@@ -16,7 +16,7 @@ from .serializers import (UserSerializer,
         BoardSerializer,
         MoveSerializer)
 
-# Create your views here.
+from .checkers import Checkers
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -46,15 +46,38 @@ class GameViewSet(mixins.CreateModelMixin,
         game = self.get_object()
         board = game.board_set.first()
         if serializer.is_valid():
-            if testValidMove(board.layout,
-                    serializer.data['from_sq'],
-                    serializer.data['to_sq']):
-                new_board = makeMove(board.layout,
-                    serializer.validated_data['from_sq'],
-                    serializer.validated_data['to_sq'])
+            new_board = Checkers.movePiece(board.layout,
+                serializer.validated_data['from_sq'],
+                serializer.validated_data['to_sq'])
+            if new_board:
                 board.layout = new_board
                 board.save()
-            return Response({"move": serializer.data})
+                return Response({"move": serializer.data})
+            else:
+                return Response(serializer.errors,
+                    status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            return Response(serializer.errors,
+                    status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['post'])
+    def jump(self, request, pk):
+        serializer = MoveSerializer(data=request.data)
+        game = self.get_object()
+        board = game.board_set.first()
+        if serializer.is_valid():
+            new_board = Checkers.jumpPiece(board.layout,
+                serializer.validated_data['from_sq'],
+                serializer.validated_data['to_sq'])
+            if new_board:
+                board.layout = new_board
+                board.save()
+                return Response({"jump": serializer.data})
+            else:
+                return Response(serializer.errors,
+                    status=status.HTTP_400_BAD_REQUEST)
+
         else:
             return Response(serializer.errors,
                     status=status.HTTP_400_BAD_REQUEST)
@@ -65,13 +88,3 @@ class BoardViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     serializer_class = BoardSerializer
     permission_classes = (permissions.IsAuthenticated, )
 
-def testValidMove(board, from_sq, to_sq):
-    return True
-
-def makeMove(layout, from_sq, to_sq):
-    print("f:{} t:{}".format(from_sq, to_sq))
-    checker = layout[from_sq:from_sq+1]
-    print(checker)
-    layout = layout[0:from_sq] + ' ' + layout[from_sq+1:]
-    layout = layout[0:to_sq] + checker + layout[to_sq+1:]
-    return layout
