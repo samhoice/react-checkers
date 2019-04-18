@@ -17,7 +17,7 @@ export function activeSquare(state = "", action) {
             if (state === action.id) {
                 // already have an active square, and we clicked it again
                 return ""
-            }else {
+            } else {
                 // no active square yet
                 return action.id
             }

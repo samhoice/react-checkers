@@ -2,6 +2,24 @@ import React, { Component } from "react"
 import { Col } from "react-bootstrap"
 import { Checker } from "./Checker"
 
+import { connect } from "react-redux"
+import { setActiveSquare } from "../actions"
+//import { BoardSquare } from "../components/BoardSquare.js"
+
+const mapStateToProps = state => {
+    return {
+        activeSquare: state.activeSquare
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onBoardClick: id => {
+            dispatch(setActiveSquare(id))
+        }
+    }
+}
+
 class BoardSquare extends Component {
     render() {
         let bg_class = "board-square black-square"
@@ -40,4 +58,10 @@ class BoardSquare extends Component {
     }
 }
 
+const ClickableBoardSquare = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(BoardSquare)
+
 export { BoardSquare }
+export default ClickableBoardSquare

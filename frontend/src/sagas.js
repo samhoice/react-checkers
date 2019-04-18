@@ -40,7 +40,8 @@ function API_makeMove(game_id, path) {
         method: "post",
         url: url,
         data: {
-            path: path
+            from_sq: path[0],
+            to_sq: path[1]
         }
     })
         .then(response => ({ response }))

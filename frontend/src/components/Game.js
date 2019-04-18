@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { Container, Row } from "react-bootstrap"
 import { connect } from "react-redux"
-import ClickableBoardSquare from "../containers/ClickableBoardSquare"
+import ClickableBoardSquare from "../components/BoardSquare"
 import { getCurrentBoard } from "../actions"
 
 const mapStateToProps = state => {
