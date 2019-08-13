@@ -20,11 +20,6 @@ from .settings_local import *
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['dev04.adelson.io']
-
 
 # Application definition
 

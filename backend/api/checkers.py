@@ -338,6 +338,14 @@ class Checkers:
 if __name__ == "__main__":
     import argparse
     import pprint
+
+    def write_board(filename, layout, move):
+        f = open(filename, 'w')
+        f.write("{}\n".format(layout))
+        f.write("{}\n".format(move))
+        f.close()
+        
+
     parser = argparse.ArgumentParser()
     subparser = parser.add_subparsers(title="commands", dest="command")
     parser.add_argument("-f", "--filename", help="Name of game file to load")
@@ -355,8 +363,16 @@ if __name__ == "__main__":
     parse_new = subparser.add_parser("new", help="New game file")
     parse_new.add_argument("new_file", help="filename of new game")
 
-    parse_moves = subparser.add_parser("moves", help="Get moves for a piece")
-    parse_moves.add_argument("piece", help="The piece to move")
+    parse_getmoves = subparser.add_parser("getmoves", help="Get moves for a piece")
+    parse_getmoves.add_argument("piece", help="The piece to move")
+
+    parse_makemove = subparser.add_parser("makemove", help="Make a move")
+    parse_makemove.add_argument("piece", help="The piece to move")
+    parse_makemove.add_argument("target", help="The square onto which to move")
+
+    parse_jump = subparser.add_parser("jump", help="Make a jump")
+    parse_jump.add_argument("piece", help="The piece to move")
+    parse_jump.add_argument("target", help="The square onto which to move")
 
     args = parser.parse_args()
 
@@ -364,6 +380,7 @@ if __name__ == "__main__":
         f = open(args.filename)
         layout = f.readline().rstrip()
         move = int(f.readline())
+        f.close()
     else:
         layout = Checkers.base_layout
         move = 0
@@ -384,16 +401,26 @@ if __name__ == "__main__":
         else:
             print("Invalid target")
     elif args.command == "new":
-        f = open(args.new_file, 'w')
-        f.write("{}\n".format(Checkers.base_layout))
-        f.write("{}\n".format(0))
-    elif args.command == "moves":
-        if args.piece.rstrip() == 'all':
+        # new layout
+        write_board(args.new_file, Checkers.base_layout, 0)
+    elif args.command == "getmoves":
+        # get the moves for a piece (or all pieces)
+        if args.piece.rstrip() == 'all': 
             print(Checkers.getAllLegalMoves(layout, move))
         elif not Checkers.validPiece(int(args.piece), layout, move):
             print("You can't move that piece")
         else:
             print(Checkers.getLegalMoves(int(args.piece), layout))
+    elif args.command == "makemove":
+        # make a move
+        if not Checkers.validPiece(int(args.piece), layout, move):
+            print("Invalid move")
+        else:
+            write_board(args.filename,
+                Checkers.movePiece(layout, int(args.piece), int(args.target)),
+                move + 1)
+    elif args.command == "jump":
+        pass
 
     else:
         # never gets here because the parser throws an error

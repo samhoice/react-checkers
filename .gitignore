@@ -1,5 +1,7 @@
 settings_local.py
 venv
+env
+
 *.pyc
 *.swp
 *.sqlite3
