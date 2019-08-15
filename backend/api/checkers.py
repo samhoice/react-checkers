@@ -1,59 +1,52 @@
-
 class Checkers:
     adjacency_matrix = {
-        0:  {'b': (None, None), 'f': (None, 4)},
-        1:  {'b': (None, None), 'f': (4, 5)},
-        2:  {'b': (None, None), 'f': (5, 6)},
-        3:  {'b': (None, None), 'f': (6, 7)},
-        4:  {'b': (0, 1),   'f': (8, 9)},
-        5:  {'b': (1, 2),   'f': (9, 10)},
-        6:  {'b': (2, 3),   'f': (10, 11)},
-        7:  {'b': (3, None), 'f': (11, None)},
-        8:  {'b': (None, 4), 'f': (None, 12)},
-        9:  {'b': (4, 5),   'f': (12, 13)},
-        10: {'b': (5, 6),   'f': (13, 14)},
-        11: {'b': (6, 7),   'f': (14, 15)},
-        12: {'b': (8, 9),   'f': (16, 17)},
-        13: {'b': (9, 10),  'f': (17, 18)},
-        14: {'b': (10, 11), 'f': (18, 19)},
-        15: {'b': (11, None), 'f': (19, None)},
-        16: {'b': (None, 12), 'f': (None, 20)},
-        17: {'b': (12, 13), 'f': (20, 21)},
-        18: {'b': (13, 14), 'f': (21, 22)},
-        19: {'b': (14, 15), 'f': (22, 23)},
-        20: {'b': (16, 17), 'f': (24, 25)},
-        21: {'b': (17, 18), 'f': (25, 26)},
-        22: {'b': (18, 19), 'f': (26, 27)},
-        23: {'b': (19, None), 'f': (27, None)},
-        24: {'b': (None, 20), 'f': (None, 28)},
-        25: {'b': (20, 21), 'f': (28, 29)},
-        26: {'b': (21, 22), 'f': (29, 30)},
-        27: {'b': (22, 23), 'f': (30, 31)},
-        28: {'b': (24, 25), 'f': (None, None)},
-        29: {'b': (25, 26), 'f': (None, None)},
-        30: {'b': (26, 27), 'f': (None, None)},
-        31: {'b': (27, None), 'f': (None, None)}
+        0: {"b": (None, None), "f": (None, 4)},
+        1: {"b": (None, None), "f": (4, 5)},
+        2: {"b": (None, None), "f": (5, 6)},
+        3: {"b": (None, None), "f": (6, 7)},
+        4: {"b": (0, 1), "f": (8, 9)},
+        5: {"b": (1, 2), "f": (9, 10)},
+        6: {"b": (2, 3), "f": (10, 11)},
+        7: {"b": (3, None), "f": (11, None)},
+        8: {"b": (None, 4), "f": (None, 12)},
+        9: {"b": (4, 5), "f": (12, 13)},
+        10: {"b": (5, 6), "f": (13, 14)},
+        11: {"b": (6, 7), "f": (14, 15)},
+        12: {"b": (8, 9), "f": (16, 17)},
+        13: {"b": (9, 10), "f": (17, 18)},
+        14: {"b": (10, 11), "f": (18, 19)},
+        15: {"b": (11, None), "f": (19, None)},
+        16: {"b": (None, 12), "f": (None, 20)},
+        17: {"b": (12, 13), "f": (20, 21)},
+        18: {"b": (13, 14), "f": (21, 22)},
+        19: {"b": (14, 15), "f": (22, 23)},
+        20: {"b": (16, 17), "f": (24, 25)},
+        21: {"b": (17, 18), "f": (25, 26)},
+        22: {"b": (18, 19), "f": (26, 27)},
+        23: {"b": (19, None), "f": (27, None)},
+        24: {"b": (None, 20), "f": (None, 28)},
+        25: {"b": (20, 21), "f": (28, 29)},
+        26: {"b": (21, 22), "f": (29, 30)},
+        27: {"b": (22, 23), "f": (30, 31)},
+        28: {"b": (24, 25), "f": (None, None)},
+        29: {"b": (25, 26), "f": (None, None)},
+        30: {"b": (26, 27), "f": (None, None)},
+        31: {"b": (27, None), "f": (None, None)},
     }
 
-    FORWARD = 'f'
-    BACK = 'b'
+    FORWARD = "f"
+    BACK = "b"
     LEFT = 0
     RIGHT = 1
 
     class Pieces:
-        RED = 'w'
-        BLACK = 'b'
-        RED_KING = 'W'
-        BLACK_KING = 'B'
-        NONE = ' '
+        RED = "w"
+        BLACK = "b"
+        RED_KING = "W"
+        BLACK_KING = "B"
+        NONE = " "
 
-    piece_mapping = {
-        ' ': 1,
-        'w': 2,
-        'b': 3,
-        'W': 4,
-        'B': 5,
-    }
+    piece_mapping = {" ": 1, "w": 2, "b": 3, "W": 4, "B": 5}
 
     pos_mapping = {
         0: (0, 0),
@@ -91,38 +84,14 @@ class Checkers:
     }
 
     rev_pos_mapping = {
-        0: {0: 0,
-            2: 8,
-            4: 16,
-            6: 24},
-        1: {1: 4,
-            3: 12,
-            5: 20,
-            7: 28},
-        2: {0: 1,
-            2: 9,
-            4: 17,
-            6: 25, },
-        3: {1: 5,
-            3: 13,
-            5: 21,
-            7: 29},
-        4: {0: 2,
-            2: 10,
-            4: 18,
-            6: 26},
-        5: {1: 6,
-            3: 14,
-            5: 22,
-            7: 30, },
-        6: {0: 3,
-            2: 11,
-            4: 19,
-            6: 27, },
-        7: {1: 7,
-            3: 15,
-            5: 23,
-            7: 31, },
+        0: {0: 0, 2: 8, 4: 16, 6: 24},
+        1: {1: 4, 3: 12, 5: 20, 7: 28},
+        2: {0: 1, 2: 9, 4: 17, 6: 25},
+        3: {1: 5, 3: 13, 5: 21, 7: 29},
+        4: {0: 2, 2: 10, 4: 18, 6: 26},
+        5: {1: 6, 3: 14, 5: 22, 7: 30},
+        6: {0: 3, 2: 11, 4: 19, 6: 27},
+        7: {1: 7, 3: 15, 5: 23, 7: 31},
     }
 
     base_layout = "bbbbbbbbbbbb        wwwwwwwwwwww"
@@ -135,7 +104,7 @@ class Checkers:
         for i, c in enumerate(layout):
             x, y = cls.pos_mapping[i]
             board[y][x] = cls.piece_mapping[c]
-        return(board)
+        return board
 
     @classmethod
     def _colorCurretlyMoving(cls, move):
@@ -160,8 +129,7 @@ class Checkers:
 
         color = cls._getColorAt(piece, layout)
 
-        if (color != cls.Pieces.NONE and
-                color == cls._colorCurretlyMoving(move)):
+        if color != cls.Pieces.NONE and color == cls._colorCurretlyMoving(move):
             return True
 
         return False
@@ -173,11 +141,11 @@ class Checkers:
         return cls.adjacency_matrix[position][direction]
 
     @classmethod
-    def _getLeftOf(cls, position, direction='f'):
+    def _getLeftOf(cls, position, direction="f"):
         return cls.adjacency_matrix[position][direction][0]
 
     @classmethod
-    def _getRightOf(cls, position, direction='f'):
+    def _getRightOf(cls, position, direction="f"):
         return cls.adjacency_matrix[position][direction][1]
 
     @classmethod
@@ -215,17 +183,17 @@ class Checkers:
         """ Gets the legal moves for a piece on the board
         """
         color = cls._getColorAt(piece, layout)
-        if color == 'w':
-            direction = 'b'
+        if color == "w":
+            direction = "b"
         else:
-            direction = 'f'
+            direction = "f"
 
         unfiltered_moves = []
 
         if cls._isKing(piece, layout):
-            left, right = cls.adjacency_matrix[piece]['b']
+            left, right = cls.adjacency_matrix[piece]["b"]
             unfiltered_moves.extend([left, right])
-            left, right = cls.adjacency_matrix[piece]['f']
+            left, right = cls.adjacency_matrix[piece]["f"]
             unfiltered_moves.extend([left, right])
         else:
             left, right = cls._getMoves(piece, direction)
@@ -236,10 +204,7 @@ class Checkers:
 
         # move destination is an opponent
         possible_jumps = list(
-            filter(
-                lambda x: cls._isOpponent(color, x, layout),
-                filtered_moves
-            )
+            filter(lambda x: cls._isOpponent(color, x, layout), filtered_moves)
         )
         if possible_jumps:
             # process jumps first because you MUST jump
@@ -247,26 +212,26 @@ class Checkers:
             # TODO for each jump, find the direction and then go two hops
             # and look for an empty square.
             unfiltered_jumps = list(
-                map(lambda x: cls._canJump(x, piece, layout), possible_jumps))
+                map(lambda x: cls._canJump(x, piece, layout), possible_jumps)
+            )
             jumps = list(filter(lambda x: x, unfiltered_jumps))
             # we don't care about moves if we have jumps
             if jumps:
-                return {'jumps': jumps}
+                return {"jumps": jumps}
 
         # if we got here, process moves
         moves = list(
             filter(
-                lambda x: cls.Pieces.NONE == cls._getColorAt(x, layout),
-                filtered_moves
+                lambda x: cls.Pieces.NONE == cls._getColorAt(
+                    x, layout), filtered_moves
             )
         )
-        return {'moves': list(moves)}
+        return {"moves": list(moves)}
 
     @classmethod
     def XYToIdx(cls, pos):
         """ returns the index position from the X, Y coord
         """
-        print("{}".format(pos))
         return cls.rev_pos_mapping[int(pos[0])][int(pos[1])]
 
     @classmethod
@@ -282,13 +247,13 @@ class Checkers:
         for i, piece in enumerate(layout):
             if cls.validPiece(i, layout, move):
                 moves_for_square = cls.getLegalMoves(i, layout)
-                if 'jumps' in moves_for_square:
+                if "jumps" in moves_for_square:
                     if not has_jumps:
                         all_moves = {}
                         has_jumps = True
                     all_moves[i] = moves_for_square
 
-                elif not has_jumps and moves_for_square['moves']:
+                elif not has_jumps and moves_for_square["moves"]:
                     all_moves[i] = moves_for_square
 
         return all_moves
@@ -301,18 +266,19 @@ class Checkers:
         moving pieces all willy-nilly.
         """
         legal_moves = cls.getLegalMoves(start, layout)
-        if end in legal_moves['moves']:
+        if end in legal_moves["moves"]:
             piece = layout[start]
-            new_layout = layout[0:start] + " " + layout[start+1:]
-            new_layout = new_layout[0:end] + piece + new_layout[end+1:]
+            new_layout = layout[0:start] + " " + layout[start + 1:]
+            new_layout = new_layout[0:end] + piece + new_layout[end + 1:]
             return new_layout
         return None
 
     @classmethod
     def jumpPiece(cls, layout, start, end):
         legal_moves = cls.getLegalMoves(start, layout)
-        print("{}".format(legal_moves))
-        if end in legal_moves['jumps']:
+        if 'jumps' not in legal_moves:
+            return None
+        if end in legal_moves["jumps"]:
             piece = layout[start]
             d = start - end
             # forwards or back
@@ -325,12 +291,15 @@ class Checkers:
             else:
                 lr = cls.LEFT
             jumped_sq = cls.adjacency_matrix[start][fb][lr]
-            print("jump: {} for:{} right:{}".format(jumped_sq, fb == cls.FORWARD, lr == cls.RIGHT))
-            new_layout = layout[0:start] + " " + layout[start+1:]
-            new_layout = new_layout[0:jumped_sq] + " " + new_layout[jumped_sq+1:]
-            new_layout = new_layout[0:end] + piece + new_layout[end+1:]
-            print(layout)
-            print(new_layout)
+            print(
+                "jump: {} forward:{} right:{}".format(
+                    jumped_sq, fb == cls.FORWARD, lr == cls.RIGHT
+                )
+            )
+            new_layout = layout[0:start] + " " + layout[start + 1:]
+            new_layout = new_layout[0:jumped_sq] + \
+                " " + new_layout[jumped_sq + 1:]
+            new_layout = new_layout[0:end] + piece + new_layout[end + 1:]
             return new_layout
         return None
 
@@ -340,11 +309,10 @@ if __name__ == "__main__":
     import pprint
 
     def write_board(filename, layout, move):
-        f = open(filename, 'w')
+        f = open(filename, "w")
         f.write("{}\n".format(layout))
         f.write("{}\n".format(move))
         f.close()
-        
 
     parser = argparse.ArgumentParser()
     subparser = parser.add_subparsers(title="commands", dest="command")
@@ -355,15 +323,14 @@ if __name__ == "__main__":
         "show", help="Display info about the game")
     parse_show.add_argument("what", help="all, move, or board")
     parse_show.add_argument(
-        "-r",
-        "--reverse",
-        help="reverse the board for red",
-        action="store_true")
+        "-r", "--reverse", help="reverse the board for red", action="store_true"
+    )
 
     parse_new = subparser.add_parser("new", help="New game file")
     parse_new.add_argument("new_file", help="filename of new game")
 
-    parse_getmoves = subparser.add_parser("getmoves", help="Get moves for a piece")
+    parse_getmoves = subparser.add_parser(
+        "getmoves", help="Get moves for a piece")
     parse_getmoves.add_argument("piece", help="The piece to move")
 
     parse_makemove = subparser.add_parser("makemove", help="Make a move")
@@ -405,7 +372,7 @@ if __name__ == "__main__":
         write_board(args.new_file, Checkers.base_layout, 0)
     elif args.command == "getmoves":
         # get the moves for a piece (or all pieces)
-        if args.piece.rstrip() == 'all': 
+        if args.piece.rstrip() == "all":
             print(Checkers.getAllLegalMoves(layout, move))
         elif not Checkers.validPiece(int(args.piece), layout, move):
             print("You can't move that piece")
@@ -415,14 +382,24 @@ if __name__ == "__main__":
         # make a move
         if not Checkers.validPiece(int(args.piece), layout, move):
             print("Invalid move")
+            parse_makemove.print_help()
         else:
-            write_board(args.filename,
+            write_board(
+                args.filename,
                 Checkers.movePiece(layout, int(args.piece), int(args.target)),
-                move + 1)
+                move + 1,
+            )
     elif args.command == "jump":
-        pass
+        new_layout = Checkers.jumpPiece(
+            layout, int(args.piece), int(args.target))
+        if new_layout:
+            new_move = move
+            lm = Checkers.getLegalMoves(int(args.target), new_layout)
+            if "jumps" not in lm:
+                new_move = move + 1
+            write_board(args.filename, new_layout, new_move)
+        else:
+            print("Invalid jump")
 
     else:
-        # never gets here because the parser throws an error
-        print("Invalid command: {}".format(args.command))
-
+        parser.print_help()
