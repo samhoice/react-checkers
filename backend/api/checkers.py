@@ -259,25 +259,35 @@ class Checkers:
         return all_moves
 
     @classmethod
-    def movePiece(cls, layout, start, end):
+    def movePiece(cls, layout, start, end, move):
         """ Moves a piece
 
-        I suppose that I should test for a valid move before I go about
-        moving pieces all willy-nilly.
+        returns a tuple, (new move number, new layout)
         """
+        if not Checkers.validPiece(start, layout, move):
+            return (None, None)
+
         legal_moves = cls.getLegalMoves(start, layout)
         if end in legal_moves["moves"]:
             piece = layout[start]
             new_layout = layout[0:start] + " " + layout[start + 1:]
             new_layout = new_layout[0:end] + piece + new_layout[end + 1:]
-            return new_layout
-        return None
+            return (move + 1, new_layout)
+        return (None, None)
 
     @classmethod
-    def jumpPiece(cls, layout, start, end):
+    def jumpPiece(cls, layout, start, end, move):
+        """ Jump a piece
+
+        returns a tuple, (new move number, new layout)
+        move number might not change if there are more required jumps
+        """
+        if not Checkers.validPiece(start, layout, move):
+            return (None, None)
+
         legal_moves = cls.getLegalMoves(start, layout)
         if 'jumps' not in legal_moves:
-            return None
+            return (None, None)
         if end in legal_moves["jumps"]:
             piece = layout[start]
             d = start - end
@@ -300,7 +310,13 @@ class Checkers:
             new_layout = new_layout[0:jumped_sq] + \
                 " " + new_layout[jumped_sq + 1:]
             new_layout = new_layout[0:end] + piece + new_layout[end + 1:]
-            return new_layout
+
+            new_legal_moves = Checkers.getLegalMoves(
+                int(args.target), new_layout)
+            if "jumps" not in new_legal_moves:
+                move = move + 1
+
+            return (move, new_layout)
         return None
 
 
@@ -330,10 +346,10 @@ if __name__ == "__main__":
     parse_new.add_argument("new_file", help="filename of new game")
 
     parse_getmoves = subparser.add_parser(
-        "getmoves", help="Get moves for a piece")
+        "lsmv", help="List moves for a piece")
     parse_getmoves.add_argument("piece", help="The piece to move")
 
-    parse_makemove = subparser.add_parser("makemove", help="Make a move")
+    parse_makemove = subparser.add_parser("move", help="Make a move")
     parse_makemove.add_argument("piece", help="The piece to move")
     parse_makemove.add_argument("target", help="The square onto which to move")
 
@@ -370,7 +386,7 @@ if __name__ == "__main__":
     elif args.command == "new":
         # new layout
         write_board(args.new_file, Checkers.base_layout, 0)
-    elif args.command == "getmoves":
+    elif args.command == "lsmv":
         # get the moves for a piece (or all pieces)
         if args.piece.rstrip() == "all":
             print(Checkers.getAllLegalMoves(layout, move))
@@ -378,26 +394,24 @@ if __name__ == "__main__":
             print("You can't move that piece")
         else:
             print(Checkers.getLegalMoves(int(args.piece), layout))
-    elif args.command == "makemove":
+    elif args.command == "move":
         # make a move
-        if not Checkers.validPiece(int(args.piece), layout, move):
+        (move_num, new_layout) = Checkers.movePiece(
+            layout, int(args.piece), int(args.target), move)
+        if not new_layout:
             print("Invalid move")
             parse_makemove.print_help()
         else:
             write_board(
                 args.filename,
-                Checkers.movePiece(layout, int(args.piece), int(args.target)),
-                move + 1,
+                new_layout,
+                move_num
             )
     elif args.command == "jump":
-        new_layout = Checkers.jumpPiece(
-            layout, int(args.piece), int(args.target))
+        (move_num, new_layout) = Checkers.jumpPiece(
+            layout, int(args.piece), int(args.target), move)
         if new_layout:
-            new_move = move
-            lm = Checkers.getLegalMoves(int(args.target), new_layout)
-            if "jumps" not in lm:
-                new_move = move + 1
-            write_board(args.filename, new_layout, new_move)
+            write_board(args.filename, new_layout, move_num)
         else:
             print("Invalid jump")
 
