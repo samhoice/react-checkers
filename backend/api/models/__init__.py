@@ -1,3 +1,5 @@
 from .game import (Game,
                    Board,
-                   Move)
+                   Turn,
+                   Move,
+                   Jump)

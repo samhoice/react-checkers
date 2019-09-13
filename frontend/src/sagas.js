@@ -11,7 +11,7 @@ import {
 const axios = require("axios")
 
 function API_requestBoard(id) {
-    var url = "/skele/api/games/" + id
+    var url = "/checkers/api/games/" + id
     return axios
         .get(url)
         .then(response => ({ response }))
@@ -35,7 +35,7 @@ function* boardSaga() {
 }
 
 function API_makeMove(game_id, path) {
-    var url = "/skele/api/games/" + game_id + "/move/"
+    var url = "/checkers/api/games/" + game_id + "/move/"
     return axios({
         method: "post",
         url: url,

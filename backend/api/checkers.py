@@ -117,6 +117,7 @@ class Checkers:
     def _getColorAt(position, layout):
         return layout[position].lower()
 
+    @staticmethod
     def _isKing(position, layout):
         return layout[position].isupper()
 
@@ -264,15 +265,20 @@ class Checkers:
 
         returns a tuple, (new move number, new layout)
         """
+        print("Checkers.movePiece")
         if not Checkers.validPiece(start, layout, move):
+            print("piece not valid, returning")
             return (None, None)
 
+        print("start: {} layout: {}".format(start, layout))
         legal_moves = cls.getLegalMoves(start, layout)
         if end in legal_moves["moves"]:
+            print("legal move")
             piece = layout[start]
             new_layout = layout[0:start] + " " + layout[start + 1:]
             new_layout = new_layout[0:end] + piece + new_layout[end + 1:]
             return (move + 1, new_layout)
+        print("not a legal move")
         return (None, None)
 
     @classmethod

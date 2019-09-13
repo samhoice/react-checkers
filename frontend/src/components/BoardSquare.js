@@ -3,7 +3,7 @@ import { Col } from "react-bootstrap"
 import { Checker } from "./Checker"
 
 import { connect } from "react-redux"
-import { setActiveSquare } from "../actions"
+import { setActiveSquare, makeMove } from "../actions"
 //import { BoardSquare } from "../components/BoardSquare.js"
 
 const mapStateToProps = state => {
@@ -12,10 +12,13 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onBoardClick: id => {
             dispatch(setActiveSquare(id))
+        },
+        onMove: (game_id, path) => {
+            dispatch(makeMove(game_id, path))
         }
     }
 }
@@ -45,14 +48,24 @@ class BoardSquare extends Component {
                 xs={1}
                 className={bg_class}
                 id={this.props.id}
-                onClick={
-                    this.props.square
-                        ? () => this.props.onBoardClick(this.props.id)
-                        : null
+                onClick={() => {
+                    // need a closure to wrap the functions and the parameters
+                    // so that I can use the closure as the onclick and select
+                    // two funcs with different parameters
+                    if (this.props.activeSquare && this.props.activeSquare != this.props.id) {
+                    
+                        // we have an active square but this is not it. Try to move
+                        this.props.onMove(this.props.activeSquare, this.props.id)
+                    } else if (this.props.square) {
+                        // this is a clickable square (and maybe it's also the activeSquare)
+                        this.props.onBoardClick(this.props.id)
+                    }
+                }
                 }
             >
                 {checker}
                 {this.props.square ? sq_num : ""}
+                {xy}
             </Col>
         )
     }

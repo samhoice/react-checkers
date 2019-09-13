@@ -5,7 +5,6 @@ import {
     BOARD_REQUESTED,
     BOARD_RECEIVE_SUCCESS,
     BOARD_RECEIVE_FAILURE,
-    makeMove,
     MOVE_REQUESTED,
     MOVE_REQUEST_SUCCESS,
     MOVE_REQUEST_FAILURE
@@ -52,6 +51,13 @@ export function boardLayout(state = initialBoardLayout, action) {
         default:
             return state
     }
+}
+
+const initialMoveState = {
+    requested: false,
+}
+export function moveReducer(state = initialMoveState, action) {
+
 }
 
 const rootReducer = combineReducers({

@@ -37,7 +37,7 @@ apipatterns = router.urls + [
 
 
 urlpatterns = [
-    path('skele/', include([
+    path('checkers/', include([
         path('admin/', admin.site.urls),
         path('api/', include(apipatterns)),
 

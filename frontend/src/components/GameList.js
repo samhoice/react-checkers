@@ -45,7 +45,7 @@ class GameList extends Component {
 
     componentWillMount() {
         axios
-            .get("/skele/api/games")
+            .get("/checkers/api/games")
             .then(response => {
                 this.processList(response)
             })
@@ -59,7 +59,7 @@ class GameList extends Component {
 
         axios
             .post(
-                "/skele/api/games/",
+                "/checkers/api/games/",
                 {},
                 {
                     xsrfCookieName: "csrftoken",

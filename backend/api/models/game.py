@@ -76,9 +76,22 @@ class Board(models.Model):
         pass
 
 
+class Turn(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    complete = models.BooleanField(default=True)
+
+
 class Move(models.Model):
     from_sq = models.IntegerField()
     to_sq = models.IntegerField()
-    created = models.DateTimeField()
+    created = models.DateTimeField(auto_now_add=True)
     moved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    turn = models.ForeignKey(Turn, on_delete=models.CASCADE)
+
+
+class Jump(models.Model):
+    from_sq = models.IntegerField()
+    to_sq = models.IntegerField()
+    created = models.DateTimeField(auto_now_add=True)
+    moved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    turn = models.ForeignKey(Turn, on_delete=models.CASCADE)
