@@ -32,6 +32,11 @@ class GameSerializer(serializers.ModelSerializer):
         fields = ('id', 'url', 'created', 'white_player', 'black_player', 'board_set')
         read_only_fields = ('white_player', 'black_player', 'board_set')
 
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['turn'] = instance.turn_set.count()
+        return ret
+
 class GameListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game

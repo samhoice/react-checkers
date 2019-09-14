@@ -8,7 +8,7 @@ import { setActiveSquare, makeMove } from "../actions"
 
 const mapStateToProps = state => {
     return {
-        activeSquare: state.activeSquare
+        activeSquare: state.uiState.active_sq
     }
 }
 

@@ -1,12 +1,13 @@
 import React, { Component } from "react"
-import { Container, Row } from "react-bootstrap"
+import { Container, Row, Col } from "react-bootstrap"
 import { connect } from "react-redux"
 import ClickableBoardSquare from "../components/BoardSquare"
+import UI from "../components/UI"
 import { getCurrentBoard } from "../actions"
 
 const mapStateToProps = state => {
     return {
-        boardState: state.boardLayout.layout
+        boardState: state.gameState.layout
     }
 }
 
@@ -40,6 +41,11 @@ class Board extends Component {
         board.reverse()
         return (
             <Container>
+                <Row>
+                <Col xs={2}>
+                    <UI></UI>
+                </Col>
+                <Col xs={8}>
                 {board.map((row, i) => (
                     <Row className="checker-row">
                         {row.map((sq, j) => (
@@ -51,6 +57,10 @@ class Board extends Component {
                         ))}
                     </Row>
                 ))}
+                </Col>
+                <Col xs={2}>
+                </Col>
+                </Row>
             </Container>
         )
     }
