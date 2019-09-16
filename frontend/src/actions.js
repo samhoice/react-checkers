@@ -2,10 +2,17 @@ export const BOARD_REQUESTED = "BOARD_REQUESTED"
 export const BOARD_RECEIVE_SUCCESS = "BOARD_RECEIVE_SUCCESS"
 export const BOARD_RECEIVE_FAILURE = "BOARD_RECEIVE_FAILURE"
 
+export const SET_GAME_ID = "SET_GAME_ID"
 export const SET_ACTIVE_SQUARE = "SET_ACTIVE_SQUARE"
 export const MOVE_REQUESTED = "MOVE_REQUESTED"
 export const MOVE_REQUEST_SUCCESS = "MOVE_REQUEST_SUCCESS"
 export const MOVE_REQUEST_FAILURE = "MOVE_REQUEST_FAILURE"
+
+export const TOGGLE_DEBUG_SYMBOLS = "TOGGLE_DEBUG_SYMBOLS"
+
+export function setGameId(id) {
+    return { type: SET_GAME_ID, id}
+}
 
 export function setActiveSquare(id) {
     return { type: SET_ACTIVE_SQUARE, id }
@@ -35,4 +42,8 @@ export function moveSuccess(path) {
 
 export function moveFail(e) {
     return { type: MOVE_REQUEST_FAILURE, e }
+}
+
+export function setDebug(value) {
+    return { type: TOGGLE_DEBUG_SYMBOLS, value }
 }

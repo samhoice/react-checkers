@@ -1,4 +1,5 @@
 import { call, put, all, takeEvery } from "redux-saga/effects"
+import Cookies from "js-cookie"
 import {
     BOARD_REQUESTED,
     BOARD_RECEIVE_SUCCESS,
@@ -26,7 +27,7 @@ function* getBoard(action) {
             board: response.data.board_set[0].layout
         })
     } else {
-        yield put({ type: BOARD_RECEIVE_FAILURE, error: response })
+        yield put({ type: BOARD_RECEIVE_FAILURE, error: error.response })
     }
 }
 
@@ -36,9 +37,11 @@ function* boardSaga() {
 
 function API_makeMove(game_id, path) {
     var url = "/checkers/api/games/" + game_id + "/move/"
+    var csrftoken = Cookies.get('csrftoken')
     return axios({
         method: "post",
         url: url,
+        headers: {'X-CSRFToken': csrftoken},
         data: {
             from_sq: path[0],
             to_sq: path[1]
@@ -57,7 +60,7 @@ function* sendMove(action) {
     if (response) {
         yield put({ type: MOVE_REQUEST_SUCCESS, move: response.data.move })
     } else {
-        yield put({ type: MOVE_REQUEST_FAILURE, error: response })
+        yield put({ type: MOVE_REQUEST_FAILURE, error: error.response })
     }
 }
 

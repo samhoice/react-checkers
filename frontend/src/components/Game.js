@@ -3,10 +3,11 @@ import { Container, Row, Col } from "react-bootstrap"
 import { connect } from "react-redux"
 import ClickableBoardSquare from "../components/BoardSquare"
 import UI from "../components/UI"
-import { getCurrentBoard } from "../actions"
+import { getCurrentBoard, setGameId } from "../actions"
 
 const mapStateToProps = state => {
     return {
+        gameId: state.uiState.game_id,
         boardState: state.gameState.layout
     }
 }
@@ -15,13 +16,17 @@ const mapDispatchToProps = dispatch => {
     return {
         getBoard: id => {
             dispatch(getCurrentBoard(id))
-        }
+        },
+        setGameId: id => {
+            dispatch(setGameId(id))
+        },
     }
 }
 
 class Game extends Component {
     componentWillMount() {
         this.props.getBoard(this.props.match.params.id)
+        this.props.setGameId(this.props.match.params.id)
     }
 
     render() {

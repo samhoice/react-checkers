@@ -1,13 +1,15 @@
 import { combineReducers } from "redux"
 
 import {
+    SET_GAME_ID,
     SET_ACTIVE_SQUARE,
     BOARD_REQUESTED,
     BOARD_RECEIVE_SUCCESS,
     BOARD_RECEIVE_FAILURE,
     MOVE_REQUESTED,
     MOVE_REQUEST_SUCCESS,
-    MOVE_REQUEST_FAILURE
+    MOVE_REQUEST_FAILURE,
+    TOGGLE_DEBUG_SYMBOLS
 } from "./actions"
 
 // UI State
@@ -17,10 +19,14 @@ const initialUIState = {
     turn_num: 0,
     board_id: 0,
     active_sq: "",
-
+    debug: false,
+    status: 200,
+    emessage: "",
 }
 export function uiState(state = initialUIState, action) {
     switch (action.type) {
+        case SET_GAME_ID: 
+            return { ...state, game_id: action.id}
         case SET_ACTIVE_SQUARE:
             if (state.active_sq === action.id) {
                 // already have an active square, and we clicked it again
@@ -29,8 +35,22 @@ export function uiState(state = initialUIState, action) {
                 // no active square yet
                 return { ...state, active_sq: action.id}
             }
-        //case BOARD_RECEIVE_SUCCESS:
-        //    return { ...state, board_id: action.board.id }
+        case BOARD_RECEIVE_SUCCESS:
+            return { ...state, status: "200", req_pending: false }
+        case BOARD_RECEIVE_FAILURE:
+            return { ...state, 
+                status: action.error.status, 
+                emessage: action.error.data.detail, 
+                req_pending: false }
+        case TOGGLE_DEBUG_SYMBOLS:
+            return { ...state, debug: action.value }
+        case MOVE_REQUEST_SUCCESS:
+            return { ...state, status: "200", req_pending: false}
+        case MOVE_REQUEST_FAILURE:
+            return { ...state, 
+                status: action.error.status, 
+                emessage: action.error.data.detail, 
+                req_pending: false}
         default:
             return state
     }

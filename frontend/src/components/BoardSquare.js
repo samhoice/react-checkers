@@ -8,7 +8,9 @@ import { setActiveSquare, makeMove } from "../actions"
 
 const mapStateToProps = state => {
     return {
-        activeSquare: state.uiState.active_sq
+        activeSquare: state.uiState.active_sq,
+        debug: state.uiState.debug,
+        game_id: state.uiState.game_id,
     }
 }
 
@@ -41,8 +43,13 @@ class BoardSquare extends Component {
 
         let number = this.props.id.split("-")[1]
         let xy = number.split('')
-
         let sq_num = parseInt(xy[1])*4 + Math.floor(parseInt(xy[0])/2)
+        let sq_txt = ""
+
+        if(this.props.debug) {
+            sq_txt = sq_num + " " + xy
+        }
+
         return (
             <Col
                 xs={1}
@@ -55,7 +62,8 @@ class BoardSquare extends Component {
                     if (this.props.activeSquare && this.props.activeSquare != this.props.id) {
                     
                         // we have an active square but this is not it. Try to move
-                        this.props.onMove(this.props.activeSquare, this.props.id)
+                        this.props.onMove(this.props.game_id, 
+                            {from_sq: this.props.activeSquare, to_sq: this.props.id}) 
                     } else if (this.props.square) {
                         // this is a clickable square (and maybe it's also the activeSquare)
                         this.props.onBoardClick(this.props.id)
@@ -64,8 +72,7 @@ class BoardSquare extends Component {
                 }
             >
                 {checker}
-                {this.props.square ? sq_num : ""}
-                {xy}
+                {this.props.square ? sq_txt : ""}
             </Col>
         )
     }
