@@ -51,7 +51,8 @@ class MoveSerializer(serializers.ModelSerializer):
     to_sq = serializers.CharField(min_length=2, max_length=2)
     class Meta:
         model = Move
-        fields = ('id', 'from_sq', 'to_sq')
+        fields = ('id', 'from_sq', 'to_sq', 'turn')
+        read_only_fields = ('turn', )
 
     pos_mapping = {
         0: (0, 0),
@@ -137,6 +138,6 @@ class MoveSerializer(serializers.ModelSerializer):
         fy = data['from_sq'][1:]
         tx = data['to_sq'][0:1]
         ty = data['to_sq'][1:]
-        data['from_sq'] = MoveSerializer.rev_pos_mapping[int(fx)][int(fy)]
-        data['to_sq'] = MoveSerializer.rev_pos_mapping[int(tx)][int(ty)]
-        return data
+        value['from_sq'] = MoveSerializer.rev_pos_mapping[int(fx)][int(fy)]
+        value['to_sq'] = MoveSerializer.rev_pos_mapping[int(tx)][int(ty)]
+        return value

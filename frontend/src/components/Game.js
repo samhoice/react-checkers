@@ -25,8 +25,8 @@ const mapDispatchToProps = dispatch => {
 
 class Game extends Component {
     componentWillMount() {
-        this.props.getBoard(this.props.match.params.id)
         this.props.setGameId(this.props.match.params.id)
+        this.props.getBoard(this.props.match.params.id)
     }
 
     render() {

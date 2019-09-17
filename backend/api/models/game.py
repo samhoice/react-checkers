@@ -80,6 +80,11 @@ class Turn(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     complete = models.BooleanField(default=True)
 
+    def __str__(self):
+        jump_move = "move"
+        if self.jump_set.exists():
+            jump_move = "jump"
+        return "Turn: {} - game {} {}".format(self.pk, self.game.id, jump_move)
 
 class Move(models.Model):
     from_sq = models.IntegerField()

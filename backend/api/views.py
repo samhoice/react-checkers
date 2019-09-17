@@ -67,7 +67,8 @@ class GameViewSet(mixins.CreateModelMixin,
                 move.save()
                 board_serializer = BoardSerializer(board)
                 return Response({"move": serializer.data,
-                                 "board": board_serializer.data})
+                                 "board": board_serializer.data,
+                                 "turn": game.turn_set.count()})
             else:
                 return Response({"response": 'Invalid move'},
                                 status=status.HTTP_400_BAD_REQUEST)

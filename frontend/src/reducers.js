@@ -38,7 +38,11 @@ export function uiState(state = initialUIState, action) {
         case BOARD_REQUESTED:
             return { ...state, req_pending: true }
         case BOARD_RECEIVE_SUCCESS:
-            return { ...state, status: "200", req_pending: false }
+            return { ...state, 
+                status: "200", 
+                game_id: action.game_id,
+                turn_num: action.turn, 
+                req_pending: false }
         case BOARD_RECEIVE_FAILURE:
             return { ...state, 
                 status: action.error.status, 
@@ -49,7 +53,11 @@ export function uiState(state = initialUIState, action) {
         case MOVE_REQUESTED:
             return { ...state, req_pending: true }
         case MOVE_REQUEST_SUCCESS:
-            return { ...state, status: "200", active_sq: "", req_pending: false}
+            return { ...state, 
+                status: "200", 
+                active_sq: "", 
+                turn_num: action.turn, 
+                req_pending: false}
         case MOVE_REQUEST_FAILURE:
             return { ...state, 
                 status: action.error.status, 

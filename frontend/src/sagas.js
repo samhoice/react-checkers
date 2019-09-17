@@ -24,7 +24,9 @@ function* getBoard(action) {
     if (response) {
         yield put({
             type: BOARD_RECEIVE_SUCCESS,
-            board: response.data.board_set[0].layout
+            game_id: response.data.id,
+            board: response.data.board_set[0].layout,
+            turn: response.data.turn
         })
     } else {
         yield put({ type: BOARD_RECEIVE_FAILURE, error: error.response })
@@ -58,7 +60,11 @@ function* sendMove(action) {
         action.move.path
     )
     if (response) {
-        yield put({ type: MOVE_REQUEST_SUCCESS, board: response.data.board.layout })
+        yield put({ 
+            type: MOVE_REQUEST_SUCCESS, 
+            turn: response.data.turn, 
+            board: response.data.board.layout 
+        })
     } else {
         yield put({ type: MOVE_REQUEST_FAILURE, error: error.response })
     }

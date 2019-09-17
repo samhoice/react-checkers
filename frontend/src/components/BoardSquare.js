@@ -60,7 +60,7 @@ class BoardSquare extends Component {
                     // need a closure to wrap the functions and the parameters
                     // so that I can use the closure as the onclick and select
                     // two funcs with different parameters
-                    if (this.props.activeSquare && this.props.activeSquare != this.props.id) {
+                    if (this.props.activeSquare && this.props.activeSquare !== this.props.id) {
                     
                         // we have an active square but this is not it. Try to move
                         this.props.onMove(this.props.game_id, 
