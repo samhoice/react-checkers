@@ -43,8 +43,8 @@ function API_makeMove(game_id, path) {
         url: url,
         headers: {'X-CSRFToken': csrftoken},
         data: {
-            from_sq: path[0],
-            to_sq: path[1]
+            from_sq: path['from_sq'],
+            to_sq: path['to_sq']
         }
     })
         .then(response => ({ response }))
@@ -58,7 +58,7 @@ function* sendMove(action) {
         action.move.path
     )
     if (response) {
-        yield put({ type: MOVE_REQUEST_SUCCESS, move: response.data.move })
+        yield put({ type: MOVE_REQUEST_SUCCESS, board: response.data.board.layout })
     } else {
         yield put({ type: MOVE_REQUEST_FAILURE, error: error.response })
     }

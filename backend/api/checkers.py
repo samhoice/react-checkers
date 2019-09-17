@@ -266,13 +266,14 @@ class Checkers:
         returns a tuple, (new move number, new layout)
         """
         print("Checkers.movePiece")
+        print("start {} end {}".format(start, end))
         if not Checkers.validPiece(start, layout, move):
             print("piece not valid, returning")
             return (None, None)
 
         print("start: {} layout: {}".format(start, layout))
         legal_moves = cls.getLegalMoves(start, layout)
-        if end in legal_moves["moves"]:
+        if 'moves' in legal_moves and end in legal_moves["moves"]:
             print("legal move")
             piece = layout[start]
             new_layout = layout[0:start] + " " + layout[start + 1:]

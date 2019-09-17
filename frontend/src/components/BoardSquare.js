@@ -42,6 +42,7 @@ class BoardSquare extends Component {
         }
 
         let number = this.props.id.split("-")[1]
+        let active_num = this.props.activeSquare.split("-")[1]
         let xy = number.split('')
         let sq_num = parseInt(xy[1])*4 + Math.floor(parseInt(xy[0])/2)
         let sq_txt = ""
@@ -63,7 +64,7 @@ class BoardSquare extends Component {
                     
                         // we have an active square but this is not it. Try to move
                         this.props.onMove(this.props.game_id, 
-                            {from_sq: this.props.activeSquare, to_sq: this.props.id}) 
+                            {from_sq: active_num, to_sq: number}) 
                     } else if (this.props.square) {
                         // this is a clickable square (and maybe it's also the activeSquare)
                         this.props.onBoardClick(this.props.id)

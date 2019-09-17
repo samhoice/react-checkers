@@ -30,11 +30,13 @@ export function uiState(state = initialUIState, action) {
         case SET_ACTIVE_SQUARE:
             if (state.active_sq === action.id) {
                 // already have an active square, and we clicked it again
-                return ""
+                return { ...state, active_sq: ""}
             } else {
                 // no active square yet
                 return { ...state, active_sq: action.id}
             }
+        case BOARD_REQUESTED:
+            return { ...state, req_pending: true }
         case BOARD_RECEIVE_SUCCESS:
             return { ...state, status: "200", req_pending: false }
         case BOARD_RECEIVE_FAILURE:
@@ -44,8 +46,10 @@ export function uiState(state = initialUIState, action) {
                 req_pending: false }
         case TOGGLE_DEBUG_SYMBOLS:
             return { ...state, debug: action.value }
+        case MOVE_REQUESTED:
+            return { ...state, req_pending: true }
         case MOVE_REQUEST_SUCCESS:
-            return { ...state, status: "200", req_pending: false}
+            return { ...state, status: "200", active_sq: "", req_pending: false}
         case MOVE_REQUEST_FAILURE:
             return { ...state, 
                 status: action.error.status, 
@@ -80,6 +84,8 @@ export function gameState(state = initialBoardLayout, action) {
             return { ...state, layout: action.board.slice(), req_pending: false }
         case BOARD_RECEIVE_FAILURE:
             return { ...state, error: action.error.message, req_pending: false }
+        case MOVE_REQUEST_SUCCESS:
+            return { ...state, layout: action.board.slice() }
         default:
             return state
     }

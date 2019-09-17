@@ -32,7 +32,6 @@ class Game extends Component {
     render() {
         return (
             <div>
-                Game {this.props.match.params.id}
                 <Board boardState={this.props.boardState} />
             </div>
         )
