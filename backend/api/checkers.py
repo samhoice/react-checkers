@@ -164,6 +164,7 @@ class Checkers:
         # figure out the jump direction. Assume that the target is
         # legal as far as going forard/backward and don't check color
         # or king status
+        print("canJump: {} {}".format(target, piece))
         if target == cls.adjacency_matrix[piece][cls.FORWARD][cls.LEFT]:
             landing_sq = cls.adjacency_matrix[target][cls.FORWARD][cls.LEFT]
         elif target == cls.adjacency_matrix[piece][cls.FORWARD][cls.RIGHT]:
@@ -172,6 +173,9 @@ class Checkers:
             landing_sq = cls.adjacency_matrix[target][cls.BACK][cls.LEFT]
         elif target == cls.adjacency_matrix[piece][cls.BACK][cls.RIGHT]:
             landing_sq = cls.adjacency_matrix[target][cls.BACK][cls.RIGHT]
+
+        if landing_sq is None:
+            return None
 
         # check if there's an unoccupied square to land in
         if cls._getColorAt(landing_sq, layout) == cls.Pieces.NONE:
@@ -265,6 +269,8 @@ class Checkers:
 
         returns a tuple, (new move number, new layout)
         """
+        start = int(start)
+        end = int(end)
         print("Checkers.movePiece")
         print("start {} end {}".format(start, end))
         if not Checkers.validPiece(start, layout, move):
@@ -289,6 +295,9 @@ class Checkers:
         returns a tuple, (new move number, new layout)
         move number might not change if there are more required jumps
         """
+        start = int(start)
+        end = int(end)
+
         if not Checkers.validPiece(start, layout, move):
             return (None, None)
 
@@ -319,12 +328,12 @@ class Checkers:
             new_layout = new_layout[0:end] + piece + new_layout[end + 1:]
 
             new_legal_moves = Checkers.getLegalMoves(
-                int(args.target), new_layout)
+                int(end), new_layout)
             if "jumps" not in new_legal_moves:
                 move = move + 1
 
             return (move, new_layout)
-        return None
+        return (None, None)
 
 
 if __name__ == "__main__":

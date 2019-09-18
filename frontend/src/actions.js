@@ -8,6 +8,10 @@ export const MOVE_REQUESTED = "MOVE_REQUESTED"
 export const MOVE_REQUEST_SUCCESS = "MOVE_REQUEST_SUCCESS"
 export const MOVE_REQUEST_FAILURE = "MOVE_REQUEST_FAILURE"
 
+export const JUMP_REQUESTED = "JUMP_REQUESTED"
+export const JUMP_REQUEST_SUCCESS = "JUMP_REQUEST_SUCCESS"
+export const JUMP_REQUEST_FAILURE = "JUMP_REQUEST_FAILURE"
+
 export const TOGGLE_DEBUG_SYMBOLS = "TOGGLE_DEBUG_SYMBOLS"
 
 export function setGameId(id) {
@@ -42,6 +46,18 @@ export function moveSuccess(path) {
 
 export function moveFail(e) {
     return { type: MOVE_REQUEST_FAILURE, e }
+}
+
+export function makeJump(game_id, path) {
+    return { type: JUMP_REQUESTED, jump: { game_id: game_id, path: path } }
+}
+
+export function jumpSuccess(path) {
+    return { type: JUMP_REQUEST_SUCCESS, path }
+}
+
+export function jumpFail(e) {
+    return { type: JUMP_REQUEST_FAILURE, e }
 }
 
 export function setDebug(value) {

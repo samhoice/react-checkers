@@ -14,6 +14,11 @@ class Game(models.Model):
                                      related_name='w_player_set')
     created = models.DateTimeField(auto_now_add=True)
 
+    def getTurnNum(self):
+       return self.turn_set.filter(complete=True).count()
+
+    def getBoard(self):
+        return self.board_set.first()
 
 def create_board(sender, instance, **kwargs):
     Board.objects.create(game=instance)

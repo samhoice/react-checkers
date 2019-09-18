@@ -6,7 +6,10 @@ import {
     BOARD_RECEIVE_FAILURE,
     MOVE_REQUESTED,
     MOVE_REQUEST_SUCCESS,
-    MOVE_REQUEST_FAILURE
+    MOVE_REQUEST_FAILURE,
+    JUMP_REQUESTED,
+    JUMP_REQUEST_SUCCESS,
+    JUMP_REQUEST_FAILURE
 } from "./actions"
 
 const axios = require("axios")
@@ -37,8 +40,8 @@ function* boardSaga() {
     yield takeEvery(BOARD_REQUESTED, getBoard)
 }
 
-function API_makeMove(game_id, path) {
-    var url = "/checkers/api/games/" + game_id + "/move/"
+function API_makeMove(game_id, endpoint, path) {
+    var url = "/checkers/api/games/" + game_id + endpoint
     var csrftoken = Cookies.get('csrftoken')
     return axios({
         method: "post",
@@ -57,6 +60,7 @@ function* sendMove(action) {
     const { response, error } = yield call(
         API_makeMove,
         action.move.game_id,
+        '/move/',
         action.move.path
     )
     if (response) {
@@ -70,8 +74,27 @@ function* sendMove(action) {
     }
 }
 
+function* sendJump(action) {
+    const { response, error } = yield call(
+        API_makeMove,
+        action.jump.game_id,
+        '/jump/',
+        action.jump.path
+    )
+    if (response) {
+        yield put({ 
+            type: JUMP_REQUEST_SUCCESS, 
+            turn: response.data.turn, 
+            board: response.data.board.layout 
+        })
+    } else {
+        yield put({ type: JUMP_REQUEST_FAILURE, error: error.response })
+    }
+}
+
 function* moveSaga() {
     yield takeEvery(MOVE_REQUESTED, sendMove)
+    yield takeEvery(JUMP_REQUESTED, sendJump)
 }
 
 function* rootSaga() {

@@ -9,6 +9,9 @@ import {
     MOVE_REQUESTED,
     MOVE_REQUEST_SUCCESS,
     MOVE_REQUEST_FAILURE,
+    JUMP_REQUESTED,
+    JUMP_REQUEST_SUCCESS,
+    JUMP_REQUEST_FAILURE,
     TOGGLE_DEBUG_SYMBOLS
 } from "./actions"
 
@@ -51,14 +54,17 @@ export function uiState(state = initialUIState, action) {
         case TOGGLE_DEBUG_SYMBOLS:
             return { ...state, debug: action.value }
         case MOVE_REQUESTED:
+        case JUMP_REQUESTED:
             return { ...state, req_pending: true }
         case MOVE_REQUEST_SUCCESS:
+        case JUMP_REQUEST_SUCCESS:
             return { ...state, 
                 status: "200", 
                 active_sq: "", 
                 turn_num: action.turn, 
                 req_pending: false}
         case MOVE_REQUEST_FAILURE:
+        case JUMP_REQUEST_FAILURE:
             return { ...state, 
                 status: action.error.status, 
                 emessage: action.error.data.detail, 
@@ -93,6 +99,7 @@ export function gameState(state = initialBoardLayout, action) {
         case BOARD_RECEIVE_FAILURE:
             return { ...state, error: action.error.message, req_pending: false }
         case MOVE_REQUEST_SUCCESS:
+        case JUMP_REQUEST_SUCCESS:
             return { ...state, layout: action.board.slice() }
         default:
             return state

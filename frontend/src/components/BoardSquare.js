@@ -3,7 +3,7 @@ import { Col } from "react-bootstrap"
 import { Checker } from "./Checker"
 
 import { connect } from "react-redux"
-import { setActiveSquare, makeMove } from "../actions"
+import { setActiveSquare, makeMove, makeJump } from "../actions"
 //import { BoardSquare } from "../components/BoardSquare.js"
 
 const mapStateToProps = state => {
@@ -21,17 +21,23 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onMove: (game_id, path) => {
             dispatch(makeMove(game_id, path))
+        },
+        onJump: (game_id, path) => {
+            dispatch(makeJump(game_id, path))
         }
     }
 }
 
 class BoardSquare extends Component {
     render() {
-        let bg_class = "board-square black-square"
         if (this.props.square === 0) {
-            bg_class = "board-square white-square"
+            //bg_class = "board-square white-square"
+            return (
+                <Col xs={1} className="board-square white-square" id={this.props.id}></Col>
+            )
         }
 
+        let bg_class = "board-square black-square"
         if (this.props.activeSquare === this.props.id) {
             bg_class = bg_class + " active"
         }
@@ -56,24 +62,32 @@ class BoardSquare extends Component {
                 xs={1}
                 className={bg_class}
                 id={this.props.id}
-                onClick={() => {
-                    // need a closure to wrap the functions and the parameters
-                    // so that I can use the closure as the onclick and select
-                    // two funcs with different parameters
-                    if (this.props.activeSquare && this.props.activeSquare !== this.props.id) {
-                    
-                        // we have an active square but this is not it. Try to move
-                        this.props.onMove(this.props.game_id, 
-                            {from_sq: active_num, to_sq: number}) 
-                    } else if (this.props.square) {
-                        // this is a clickable square (and maybe it's also the activeSquare)
-                        this.props.onBoardClick(this.props.id)
+                onClick={
+                    () => {
+                        // need a closure to wrap the functions and the parameters
+                        // so that I can use the closure as the onclick and select
+                        // two funcs with different parameters
+                        if (this.props.activeSquare && this.props.activeSquare !== this.props.id) {
+                            // we have an active square but this is not it. Try to move
+                            // xy is the coords of this sq.
+                            // need coords of active square
+                            let xy_active = this.props.activeSquare.split('-')[1].split('')
+                            if(Math.abs(xy[0] - xy_active[0]) > 1) {
+                                this.props.onJump(this.props.game_id, 
+                                    {from_sq: active_num, to_sq: number}) 
+                            } else {
+                                this.props.onMove(this.props.game_id, 
+                                    {from_sq: active_num, to_sq: number}) 
+                            }
+                        } else {
+                            // this is a clickable square (and maybe it's also the activeSquare)
+                            this.props.onBoardClick(this.props.id)
+                        }
                     }
-                }
                 }
             >
                 {checker}
-                {this.props.square ? sq_txt : ""}
+                {sq_txt}
             </Col>
         )
     }
