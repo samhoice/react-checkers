@@ -17,14 +17,15 @@ import {
 
 const axios = require("axios")
 
-const BASE_URL = "/checkers/api/"
-const GAMES_ENDPOINT = "games/"
-const USER_ENDPOINT = "users/"
-const MOVE_ACTION = "move/"
-const JUMP_ACTION = "jump/"
+const BASE_URL = "/checkers/api"
+const GAMES_ENDPOINT = "games"
+const USER_ENDPOINT = "users"
+const MOVE_ACTION = "move"
+const JUMP_ACTION = "jump"
 
 function API_requestBoard(id) {
-    var url = BASE_URL + GAMES_ENDPOINT + id
+    var url = [BASE_URL, GAMES_ENDPOINT, id].join("/")
+    url = url.endsWith('/') ? url : url + "/"
     return axios
         .get(url)
         .then(response => ({ response }))
@@ -50,7 +51,8 @@ function* boardSaga() {
 }
 
 function API_makeMove(game_id, endpoint, path) {
-    var url = BASE_URL + GAMES_ENDPOINT + game_id + endpoint
+    var url = [BASE_URL, GAMES_ENDPOINT, game_id, endpoint].join("/")
+    url = url.endsWith('/') ? url : url + "/"
     var csrftoken = Cookies.get('csrftoken')
     return axios({
         method: "post",
@@ -107,7 +109,8 @@ function* moveSaga() {
 }
 
 function API_userList() {
-    var url = BASE_URL + USER_ENDPOINT
+    var url = [BASE_URL, USER_ENDPOINT].join("/")
+    url = url.endsWith('/') ? url : url + "/"
     return axios({
         method: "get",
         url: url,

@@ -47,7 +47,7 @@ class App extends Component {
                             <Nav>
                                 <NavItem>
                                     <LinkContainer to="/">
-                                        <Nav.Link>Home</Nav.Link>
+                                        <Nav.Link>Now Playing</Nav.Link>
                                     </LinkContainer>
                                 </NavItem>
                                 <NavItem>
