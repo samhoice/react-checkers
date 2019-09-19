@@ -12,6 +12,9 @@ import {
     JUMP_REQUESTED,
     JUMP_REQUEST_SUCCESS,
     JUMP_REQUEST_FAILURE,
+    USER_LIST_REQUESTED,
+    USER_LIST_SUCCESS,
+    USER_LIST_FAILURE,
     TOGGLE_DEBUG_SYMBOLS
 } from "./actions"
 
@@ -20,7 +23,6 @@ const initialUIState = {
     game_id: 0,
     move: 0,
     turn_num: 0,
-    board_id: 0,
     active_sq: "",
     debug: false,
     status: 200,
@@ -55,9 +57,11 @@ export function uiState(state = initialUIState, action) {
             return { ...state, debug: action.value }
         case MOVE_REQUESTED:
         case JUMP_REQUESTED:
+        case USER_LIST_REQUESTED:
             return { ...state, req_pending: true }
         case MOVE_REQUEST_SUCCESS:
         case JUMP_REQUEST_SUCCESS:
+        case USER_LIST_SUCCESS:
             return { ...state, 
                 status: "200", 
                 active_sq: "", 
@@ -65,6 +69,7 @@ export function uiState(state = initialUIState, action) {
                 req_pending: false}
         case MOVE_REQUEST_FAILURE:
         case JUMP_REQUEST_FAILURE:
+        case USER_LIST_FAILURE:
             return { ...state, 
                 status: action.error.status, 
                 emessage: action.error.data.detail, 
@@ -106,6 +111,7 @@ export function gameState(state = initialBoardLayout, action) {
     }
 }
 
+// Started this, TODO may need it at some point. Show the move history?
 const initialMoveState = {
     req_pending: false,
 }
@@ -113,9 +119,22 @@ export function moveReducer(state = initialMoveState, action) {
 
 }
 
+const initialUserState = {
+    userList: []
+}
+export function userState(state = initialUserState, action) {
+    switch (action.type) {
+        case USER_LIST_SUCCESS:
+            return { ...state, userList: action.userList }
+        default:
+            return state
+    }
+}
+
 const rootReducer = combineReducers({
     uiState,
-    gameState
+    gameState,
+    userState
 })
 
 export default rootReducer

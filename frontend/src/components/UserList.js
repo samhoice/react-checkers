@@ -1,8 +1,22 @@
 import React, { Component } from "react"
 import { Container, Row, Col } from "react-bootstrap"
 import { ListGroup } from "react-bootstrap"
+import { connect } from "react-redux"
+import { getUserList } from "../actions"
 
-const axios = require("axios")
+const mapStateToProps = state => {
+    return {
+        userList: state.userState.userList
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onGetUserList: id => {
+            dispatch(getUserList())
+        }
+    }
+}
 
 class UserListItem extends Component {
     render() {
@@ -11,28 +25,8 @@ class UserListItem extends Component {
 }
 
 class UserList extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            userList: []
-        }
-        this.procResponse = this.procResponse.bind(this)
-    }
-
-    procResponse(response) {
-        const userList = response.data.results.slice()
-        this.setState({ userList: userList })
-    }
-
     componentDidMount() {
-        axios
-            .get("/skele/api/users/")
-            .then(response => {
-                this.procResponse(response)
-            })
-            .catch(function(error) {
-                console.log(error)
-            })
+        this.props.onGetUserList()
     }
 
     render() {
@@ -41,10 +35,12 @@ class UserList extends Component {
                 <h1>Users</h1>
                 <Container>
                     <Row>
-                        <Col />
+                        <Col xs={4}>
+                            <a href="#">login</a>
+                        </Col>
                         <Col xs={6}>
                             <ListGroup>
-                                {this.state.userList.map(user => (
+                                {this.props.userList.map(user => (
                                     <UserListItem user={user} />
                                 ))}
                             </ListGroup>
@@ -57,4 +53,10 @@ class UserList extends Component {
     }
 }
 
+const ComponentUserList = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(UserList)
+
 export { UserList }
+export default ComponentUserList

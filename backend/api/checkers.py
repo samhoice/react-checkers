@@ -283,6 +283,7 @@ class Checkers:
             print("legal move")
             piece = layout[start]
             new_layout = layout[0:start] + " " + layout[start + 1:]
+            # TODO: kings!
             new_layout = new_layout[0:end] + piece + new_layout[end + 1:]
             return (move + 1, new_layout)
         print("not a legal move")
@@ -325,8 +326,9 @@ class Checkers:
             new_layout = layout[0:start] + " " + layout[start + 1:]
             new_layout = new_layout[0:jumped_sq] + \
                 " " + new_layout[jumped_sq + 1:]
+            #TODO: kings!
             new_layout = new_layout[0:end] + piece + new_layout[end + 1:]
-
+            # TODO don't check multiple jumps with newly promoted king
             new_legal_moves = Checkers.getLegalMoves(
                 int(end), new_layout)
             if "jumps" not in new_legal_moves:

@@ -9,13 +9,17 @@ import {
     MOVE_REQUEST_FAILURE,
     JUMP_REQUESTED,
     JUMP_REQUEST_SUCCESS,
-    JUMP_REQUEST_FAILURE
+    JUMP_REQUEST_FAILURE,
+    USER_LIST_REQUESTED,
+    USER_LIST_SUCCESS,
+    USER_LIST_FAILURE
 } from "./actions"
 
+const BASE_URL = "/checkers/api/"
 const axios = require("axios")
 
 function API_requestBoard(id) {
-    var url = "/checkers/api/games/" + id
+    var url = BASE_URL + "/games/" + id
     return axios
         .get(url)
         .then(response => ({ response }))
@@ -41,7 +45,7 @@ function* boardSaga() {
 }
 
 function API_makeMove(game_id, endpoint, path) {
-    var url = "/checkers/api/games/" + game_id + endpoint
+    var url = BASE_URL + "/games/" + game_id + endpoint
     var csrftoken = Cookies.get('csrftoken')
     return axios({
         method: "post",
@@ -97,8 +101,34 @@ function* moveSaga() {
     yield takeEvery(JUMP_REQUESTED, sendJump)
 }
 
+function API_userList() {
+    var url = BASE_URL + "/users/"
+    return axios({
+        method: "get",
+        url: url,
+    })
+        .then(response => ({ response }))
+        .catch(error => ({ error }))
+}
+
+function* getUserList(action) {
+    const {response, error } = yield call(API_userList)
+    if (response) {
+        yield put({
+            type: USER_LIST_SUCCESS,
+            userList: response.data.results,
+        })
+    } else {
+        yield put({ type: USER_LIST_FAILURE, error: error.response })
+    }
+}
+
+function* userSaga() {
+    yield takeEvery(USER_LIST_REQUESTED, getUserList)
+}
+
 function* rootSaga() {
-    yield all([boardSaga(), moveSaga()])
+    yield all([boardSaga(), moveSaga(), userSaga()])
 }
 
 export default rootSaga

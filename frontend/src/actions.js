@@ -12,6 +12,10 @@ export const JUMP_REQUESTED = "JUMP_REQUESTED"
 export const JUMP_REQUEST_SUCCESS = "JUMP_REQUEST_SUCCESS"
 export const JUMP_REQUEST_FAILURE = "JUMP_REQUEST_FAILURE"
 
+export const USER_LIST_REQUESTED = "USER_LIST_REQUESTED"
+export const USER_LIST_SUCCESS = "USER_LIST_SUCCESS"
+export const USER_LIST_FAILURE = "USER_LIST_FAILURE"
+
 export const TOGGLE_DEBUG_SYMBOLS = "TOGGLE_DEBUG_SYMBOLS"
 
 export function setGameId(id) {
@@ -58,6 +62,18 @@ export function jumpSuccess(path) {
 
 export function jumpFail(e) {
     return { type: JUMP_REQUEST_FAILURE, e }
+}
+
+export function getUserList() {
+    return { type: USER_LIST_REQUESTED }
+}
+
+export function userListSuccess(list) {
+    return { type: USER_LIST_SUCCESS, list }
+}
+
+export function userListFail(e) {
+    return { type: USER_LIST_FAILURE, e }
 }
 
 export function setDebug(value) {

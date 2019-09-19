@@ -5,7 +5,7 @@ import { HashRouter as Router, Route, Redirect } from "react-router-dom"
 import { LinkContainer } from "react-router-bootstrap"
 import { GameList } from "./components/GameList"
 import Game from "./components/Game"
-import { UserList } from "./components/UserList"
+import UserList from "./components/UserList"
 
 class NowPlaying extends Component {
     render() {
