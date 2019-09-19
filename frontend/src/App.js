@@ -3,9 +3,16 @@ import "./App.css"
 import { Navbar, Nav, NavItem } from "react-bootstrap"
 import { HashRouter as Router, Route, Redirect } from "react-router-dom"
 import { LinkContainer } from "react-router-bootstrap"
+import { connect } from "react-redux"
 import { GameList } from "./components/GameList"
 import Game from "./components/Game"
 import UserList from "./components/UserList"
+
+const mapStateToProps = state => {
+    return {
+        now_playing: state.uiState.game_id
+    }
+}
 
 class NowPlaying extends Component {
     render() {
@@ -16,6 +23,11 @@ class NowPlaying extends Component {
         }
     }
 }
+
+const WhatsNowPlaying = connect(
+    mapStateToProps,
+    null
+)(NowPlaying)
 
 class App extends Component {
     constructor(props) {
@@ -55,10 +67,9 @@ class App extends Component {
                             exact
                             path="/"
                             render={props => (
-                                <NowPlaying
+                                <WhatsNowPlaying
                                     {...props}
-                                    now_playing={this.state.now_playing}
-                                    boardState={this.state.board}
+                                    now_playing={this.props.now_playing}
                                 />
                             )}
                         />

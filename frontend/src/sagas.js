@@ -15,11 +15,16 @@ import {
     USER_LIST_FAILURE
 } from "./actions"
 
-const BASE_URL = "/checkers/api/"
 const axios = require("axios")
 
+const BASE_URL = "/checkers/api/"
+const GAMES_ENDPOINT = "games/"
+const USER_ENDPOINT = "users/"
+const MOVE_ACTION = "move/"
+const JUMP_ACTION = "jump/"
+
 function API_requestBoard(id) {
-    var url = BASE_URL + "/games/" + id
+    var url = BASE_URL + GAMES_ENDPOINT + id
     return axios
         .get(url)
         .then(response => ({ response }))
@@ -45,7 +50,7 @@ function* boardSaga() {
 }
 
 function API_makeMove(game_id, endpoint, path) {
-    var url = BASE_URL + "/games/" + game_id + endpoint
+    var url = BASE_URL + GAMES_ENDPOINT + game_id + endpoint
     var csrftoken = Cookies.get('csrftoken')
     return axios({
         method: "post",
@@ -64,7 +69,7 @@ function* sendMove(action) {
     const { response, error } = yield call(
         API_makeMove,
         action.move.game_id,
-        '/move/',
+        MOVE_ACTION,
         action.move.path
     )
     if (response) {
@@ -82,7 +87,7 @@ function* sendJump(action) {
     const { response, error } = yield call(
         API_makeMove,
         action.jump.game_id,
-        '/jump/',
+        JUMP_ACTION,
         action.jump.path
     )
     if (response) {
@@ -102,7 +107,7 @@ function* moveSaga() {
 }
 
 function API_userList() {
-    var url = BASE_URL + "/users/"
+    var url = BASE_URL + USER_ENDPOINT
     return axios({
         method: "get",
         url: url,
