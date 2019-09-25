@@ -194,18 +194,23 @@ class Checkers:
             direction = "f"
 
         unfiltered_moves = []
+        print("getLegalMoves - direction: {}".format(direction))
 
         if cls._isKing(piece, layout):
+            print("not a king")
             left, right = cls.adjacency_matrix[piece]["b"]
             unfiltered_moves.extend([left, right])
             left, right = cls.adjacency_matrix[piece]["f"]
             unfiltered_moves.extend([left, right])
         else:
+            print("is a king")
             left, right = cls._getMoves(piece, direction)
+            print("l/r: {}, {}".format(left, right))
             unfiltered_moves.extend([left, right])
 
         # remove None destinations from the list (board edges)
-        filtered_moves = list(filter(lambda x: x, unfiltered_moves))
+        filtered_moves = list(filter(lambda x: x != None, unfiltered_moves))
+        print(filtered_moves)
 
         # move destination is an opponent
         possible_jumps = list(
@@ -219,7 +224,7 @@ class Checkers:
             unfiltered_jumps = list(
                 map(lambda x: cls._canJump(x, piece, layout), possible_jumps)
             )
-            jumps = list(filter(lambda x: x, unfiltered_jumps))
+            jumps = list(filter(lambda x: x != None, unfiltered_jumps))
             # we don't care about moves if we have jumps
             if jumps:
                 return {"jumps": jumps}
@@ -266,6 +271,10 @@ class Checkers:
     @classmethod
     def movePiece(cls, layout, start, end, move):
         """ Moves a piece
+        layout is the board layout
+        start is the starting position (sq number)
+        end is the ending position (sq number)
+        move is the move (turn) number
 
         returns a tuple, (new move number, new layout)
         """
@@ -279,11 +288,14 @@ class Checkers:
 
         print("start: {} layout: {}".format(start, layout))
         legal_moves = cls.getLegalMoves(start, layout)
+        print("legal moves: {}".format(legal_moves))
         if 'moves' in legal_moves and end in legal_moves["moves"]:
             print("legal move")
             piece = layout[start]
             new_layout = layout[0:start] + " " + layout[start + 1:]
-            # TODO: kings!
+            # kings!
+            if end < 4 or end > 27:
+                piece = piece.upper()
             new_layout = new_layout[0:end] + piece + new_layout[end + 1:]
             return (move + 1, new_layout)
         print("not a legal move")
@@ -326,12 +338,21 @@ class Checkers:
             new_layout = layout[0:start] + " " + layout[start + 1:]
             new_layout = new_layout[0:jumped_sq] + \
                 " " + new_layout[jumped_sq + 1:]
+
+            kinged = False
             #TODO: kings!
+            if piece is cls.Pieces.RED or piece is cls.Pieces.BLACK:
+                # hm...
+                if end < 4 or end > 27:
+                    print("kinged")
+                    piece = piece.upper()
+                    kinged = True
+
             new_layout = new_layout[0:end] + piece + new_layout[end + 1:]
             # TODO don't check multiple jumps with newly promoted king
-            new_legal_moves = Checkers.getLegalMoves(
-                int(end), new_layout)
-            if "jumps" not in new_legal_moves:
+
+            new_legal_moves = Checkers.getLegalMoves(int(end), new_layout)
+            if kinged or "jumps" not in new_legal_moves:
                 move = move + 1
 
             return (move, new_layout)
