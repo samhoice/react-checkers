@@ -164,7 +164,6 @@ class Checkers:
         # figure out the jump direction. Assume that the target is
         # legal as far as going forard/backward and don't check color
         # or king status
-        print("canJump: {} {}".format(target, piece))
         if target == cls.adjacency_matrix[piece][cls.FORWARD][cls.LEFT]:
             landing_sq = cls.adjacency_matrix[target][cls.FORWARD][cls.LEFT]
         elif target == cls.adjacency_matrix[piece][cls.FORWARD][cls.RIGHT]:
@@ -194,23 +193,18 @@ class Checkers:
             direction = "f"
 
         unfiltered_moves = []
-        print("getLegalMoves - direction: {}".format(direction))
 
         if cls._isKing(piece, layout):
-            print("not a king")
             left, right = cls.adjacency_matrix[piece]["b"]
             unfiltered_moves.extend([left, right])
             left, right = cls.adjacency_matrix[piece]["f"]
             unfiltered_moves.extend([left, right])
         else:
-            print("is a king")
             left, right = cls._getMoves(piece, direction)
-            print("l/r: {}, {}".format(left, right))
             unfiltered_moves.extend([left, right])
 
         # remove None destinations from the list (board edges)
         filtered_moves = list(filter(lambda x: x != None, unfiltered_moves))
-        print(filtered_moves)
 
         # move destination is an opponent
         possible_jumps = list(
@@ -218,9 +212,6 @@ class Checkers:
         )
         if possible_jumps:
             # process jumps first because you MUST jump
-
-            # TODO for each jump, find the direction and then go two hops
-            # and look for an empty square.
             unfiltered_jumps = list(
                 map(lambda x: cls._canJump(x, piece, layout), possible_jumps)
             )
@@ -280,17 +271,11 @@ class Checkers:
         """
         start = int(start)
         end = int(end)
-        print("Checkers.movePiece")
-        print("start {} end {}".format(start, end))
         if not Checkers.validPiece(start, layout, move):
-            print("piece not valid, returning")
             return (None, None)
 
-        print("start: {} layout: {}".format(start, layout))
         legal_moves = cls.getLegalMoves(start, layout)
-        print("legal moves: {}".format(legal_moves))
         if 'moves' in legal_moves and end in legal_moves["moves"]:
-            print("legal move")
             piece = layout[start]
             new_layout = layout[0:start] + " " + layout[start + 1:]
             # kings!
@@ -298,7 +283,6 @@ class Checkers:
                 piece = piece.upper()
             new_layout = new_layout[0:end] + piece + new_layout[end + 1:]
             return (move + 1, new_layout)
-        print("not a legal move")
         return (None, None)
 
     @classmethod
@@ -330,26 +314,18 @@ class Checkers:
             else:
                 lr = cls.LEFT
             jumped_sq = cls.adjacency_matrix[start][fb][lr]
-            print(
-                "jump: {} forward:{} right:{}".format(
-                    jumped_sq, fb == cls.FORWARD, lr == cls.RIGHT
-                )
-            )
             new_layout = layout[0:start] + " " + layout[start + 1:]
             new_layout = new_layout[0:jumped_sq] + \
                 " " + new_layout[jumped_sq + 1:]
 
             kinged = False
-            #TODO: kings!
             if piece is cls.Pieces.RED or piece is cls.Pieces.BLACK:
                 # hm...
                 if end < 4 or end > 27:
-                    print("kinged")
                     piece = piece.upper()
                     kinged = True
 
             new_layout = new_layout[0:end] + piece + new_layout[end + 1:]
-            # TODO don't check multiple jumps with newly promoted king
 
             new_legal_moves = Checkers.getLegalMoves(int(end), new_layout)
             if kinged or "jumps" not in new_legal_moves:

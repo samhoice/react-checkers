@@ -22,7 +22,7 @@ from .checkers import Checkers
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+    queryset = User.objects.all().order_by('username')
     serializer_class = UserSerializer
 
     permission_classes = (permissions.IsAuthenticated,)
@@ -83,7 +83,12 @@ class GameViewSet(mixins.CreateModelMixin,
         game = self.get_object()
         board = game.getBoard()
         turn = game.turn_set.filter(complete=False)
-        turn_num = game.getTurnNum()
+        if turn.count() > 1:
+            return Response({"error": "Turns are out of sync"},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        elif turn.count() == 1:
+            turn = turn[0]
+        turn_num = game.getTurnNum() 
         if serializer.is_valid():
             (move_num, new_layout) = Checkers.jumpPiece(board.layout,
                                            serializer.validated_data['from_sq'],
@@ -94,7 +99,9 @@ class GameViewSet(mixins.CreateModelMixin,
                 board.save()
                 if not turn:
                     turn = Turn(game=game)
-                if(turn_num > game.getTurnNum()):
+                if(move_num == game.getTurnNum()):
+                    turn.complete = False
+                else:
                     turn.complete = True
                 turn.save()
                 jump = Jump(from_sq=serializer.validated_data['from_sq'],
