@@ -21,7 +21,6 @@ class BoardSerializer(serializers.ModelSerializer):
         board = [[0 for x in range(8)] for y in range(8)]
         for i, c in enumerate(obj.layout):
             x, y = MoveSerializer.pos_mapping[i]
-            # print(i, x, y, c)
             board[y][x] = Board.piece_mapping[c]
         return board
 
@@ -34,7 +33,7 @@ class GameSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        ret['turn'] = instance.turn_set.count()
+        ret['turn'] = instance.getTurnNum()
         return ret
 
 class GameListSerializer(serializers.ModelSerializer):

@@ -45,13 +45,14 @@ export function uiState(state = initialUIState, action) {
         case BOARD_RECEIVE_SUCCESS:
             return { ...state, 
                 status: "200", 
+                emessage: "",
                 game_id: action.game_id,
                 turn_num: action.turn, 
                 req_pending: false }
         case BOARD_RECEIVE_FAILURE:
             return { ...state, 
                 status: action.error.status, 
-                emessage: action.error.data.detail, 
+                emessage: action.error.data.error, 
                 req_pending: false }
         case TOGGLE_DEBUG_SYMBOLS:
             return { ...state, debug: action.value }
@@ -64,6 +65,7 @@ export function uiState(state = initialUIState, action) {
         case USER_LIST_SUCCESS:
             return { ...state, 
                 status: "200", 
+                emessage: "",
                 active_sq: "", 
                 turn_num: action.turn, 
                 req_pending: false}
@@ -72,7 +74,7 @@ export function uiState(state = initialUIState, action) {
         case USER_LIST_FAILURE:
             return { ...state, 
                 status: action.error.status, 
-                emessage: action.error.data.detail, 
+                emessage: action.error.data.error,
                 req_pending: false}
         default:
             return state

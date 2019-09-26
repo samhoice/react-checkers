@@ -49,6 +49,9 @@ class GameViewSet(mixins.CreateModelMixin,
         serializer = MoveSerializer(data=request.data)
         game = self.get_object()
         board = game.getBoard()
+        if game.turn_set.filter(complete=False).count():
+            return Response({"error": "Can't move during a jump"},
+                    status=status.HTTP_400_BAD_REQUEST)
         if serializer.is_valid():
             (move_num, new_layout) = Checkers.movePiece(board.layout,
                                                         serializer.validated_data['from_sq'],
@@ -70,7 +73,7 @@ class GameViewSet(mixins.CreateModelMixin,
                                  "board": board_serializer.data,
                                  "turn": game.getTurnNum()})
             else:
-                return Response({"response": 'Invalid move'},
+                return Response({"error": 'Invalid move'},
                                 status=status.HTTP_400_BAD_REQUEST)
 
         else:
@@ -83,13 +86,21 @@ class GameViewSet(mixins.CreateModelMixin,
         game = self.get_object()
         board = game.getBoard()
         turn = game.turn_set.filter(complete=False)
+        jumping_piece = None
         if turn.count() > 1:
             return Response({"error": "Turns are out of sync"},
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         elif turn.count() == 1:
             turn = turn[0]
+            # this is the piece that's jumping
+            jumping_piece = turn.jump_set.latest('created').to_sq
         turn_num = game.getTurnNum() 
+        print(turn_num)
         if serializer.is_valid():
+            if jumping_piece is not None and serializer.validated_data['from_sq'] != jumping_piece:
+                # make sure you keep jumping with the same piece
+                return Response({"error": 'Not the jumping piece'},
+                        status=status.HTTP_400_BAD_REQUEST)
             (move_num, new_layout) = Checkers.jumpPiece(board.layout,
                                            serializer.validated_data['from_sq'],
                                            serializer.validated_data['to_sq'],
