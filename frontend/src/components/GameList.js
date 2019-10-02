@@ -12,6 +12,7 @@ class GameListItem extends Component {
             <Link to={"/game/" + this.props.game.id}>
                 <Row>
                     <Col>{this.props.game.id}</Col>
+                    <Col>{this.props.game.winner}</Col>
                     <Col>{this.props.game.created}</Col>
                 </Row>
             </Link>
@@ -45,7 +46,7 @@ class GameList extends Component {
 
     componentWillMount() {
         axios
-            .get("/checkers/api/games")
+            .get("/checkers/api/games/")
             .then(response => {
                 this.processList(response)
             })

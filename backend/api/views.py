@@ -42,7 +42,7 @@ class GameViewSet(mixins.CreateModelMixin,
 
     def get_queryset(self):
         player = self.request.user
-        return Game.objects.filter(Q(white_player=player) | Q(black_player=player))
+        return Game.objects.filter(Q(white_player=player) | Q(black_player=player)).order_by('-created')
 
     @action(detail=True, methods=['post'])
     def move(self, request, pk):
@@ -106,6 +106,7 @@ class GameViewSet(mixins.CreateModelMixin,
                                            serializer.validated_data['to_sq'],
                                            turn_num)
             if new_layout:
+                # a jump changed the board
                 board.layout = new_layout
                 board.save()
                 if not turn:
@@ -120,10 +121,20 @@ class GameViewSet(mixins.CreateModelMixin,
                         moved_by=request.user,
                         turn=turn)
                 jump.save()
+
+                winner = Checkers.checkWin(new_layout)
+                if winner and winner == 'b':
+                    Game.winner = Game.black_player
+                    Game.save()
+                elif winner:
+                    Game.winner = Game.white_player
+                    Game.save()
+
                 board_serializer = BoardSerializer(board)
                 return Response({"jump": serializer.data,
                     "board": board_serializer.data,
-                    "turn": game.getTurnNum()})
+                    "turn": game.getTurnNum(),
+                    "end": winner != None})
             else:
                 return Response({"error": 'Invalid jump'},
                                 status=status.HTTP_400_BAD_REQUEST)

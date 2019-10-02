@@ -1,6 +1,5 @@
-Django==2.1.11
-django-extensions==2.1.5
-django-rest-auth==0.9.3
-djangorestframework==3.9.1
-pytz==2018.9
+Django==2.2.6
+django-rest-auth==0.9.5
+djangorestframework==3.10.3
+pytz==2019.2
 six==1.12.0

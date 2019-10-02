@@ -11,6 +11,14 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'url', 'username', 'email')
 
 class BoardSerializer(serializers.ModelSerializer):
+    piece_mapping = {
+        ' ': 1,
+        'w': 2,
+        'b': 3,
+        'W': 4,
+        'B': 5,
+    }
+
     layout = serializers.SerializerMethodField()
 
     class Meta:
@@ -21,15 +29,15 @@ class BoardSerializer(serializers.ModelSerializer):
         board = [[0 for x in range(8)] for y in range(8)]
         for i, c in enumerate(obj.layout):
             x, y = MoveSerializer.pos_mapping[i]
-            board[y][x] = Board.piece_mapping[c]
+            board[y][x] = self.piece_mapping[c]
         return board
 
 class GameSerializer(serializers.ModelSerializer):
     board_set = BoardSerializer(many=True)
     class Meta:
         model = Game
-        fields = ('id', 'url', 'created', 'white_player', 'black_player', 'board_set')
-        read_only_fields = ('white_player', 'black_player', 'board_set')
+        fields = ('id', 'url', 'created', 'white_player', 'black_player', 'winner', 'board_set')
+        read_only_fields = ('white_player', 'black_player', 'winner', 'board_set')
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
@@ -39,8 +47,8 @@ class GameSerializer(serializers.ModelSerializer):
 class GameListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
-        fields = ('id', 'url', 'created', 'white_player', 'black_player')
-        read_only_fields = ('white_player', 'black_player')
+        fields = ('id', 'url', 'created', 'white_player', 'black_player', 'winner')
+        read_only_fields = ('white_player', 'black_player', 'winner')
 
     def create(self, validated_data):
         return Game.objects.create(black_player=self.context['request'].user)

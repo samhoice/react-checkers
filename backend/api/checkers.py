@@ -334,6 +334,15 @@ class Checkers:
             return (move, new_layout)
         return (None, None)
 
+    @classmethod
+    def checkWin(cls, layout):
+        test_layout = layout.lower()
+        if 'w' in test_layout and 'b' in test_layout:
+            return None
+        elif 'w' in test_layout:
+            return 'w'
+        else:
+            return 'b'
 
 if __name__ == "__main__":
     import argparse

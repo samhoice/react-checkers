@@ -30,10 +30,13 @@ authpatterns = [
             auth_views.LoginView.as_view(template_name='api/login.html'),
             name='login',
         ),
+        path(
+            'logout/',
+            auth_views.LogoutView.as_view(),
+        ),
 ]
 
-apipatterns = router.urls + [
-]
+apipatterns = router.urls + authpatterns + [ ]
 
 
 urlpatterns = [
@@ -41,9 +44,10 @@ urlpatterns = [
         path('admin/', admin.site.urls),
         path('api/', include(apipatterns)),
 
-        path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+        #path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+        # token auth for external clients
         path('rest-auth/', include('rest_auth.urls')),
 
-        path('accounts/', include(authpatterns)),
+        path('auth/', include(authpatterns)),
     ])),
 ]

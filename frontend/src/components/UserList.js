@@ -36,7 +36,7 @@ class UserList extends Component {
                 <Container>
                     <Row>
                         <Col xs={4}>
-                            <a href="#">login</a>
+                            <a href="/checkers/auth/logout/">logout</a>
                         </Col>
                         <Col xs={6}>
                             <ListGroup>
