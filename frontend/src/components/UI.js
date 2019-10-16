@@ -40,9 +40,9 @@ class UI extends Component {
                 <li>Request: {this.props.request ? "Active" : "Idle" }</li>
                 <li>Status: {this.props.status}</li>
                 <li>Error: {this.props.emessage}</li>
-                <li><button class="btn btn-primary" onClick={() => this.props.onSetDebug(!this.props.debug)}>debug</button></li>
+                <li><button className="btn btn-primary" onClick={() => this.props.onSetDebug(!this.props.debug)}>debug</button></li>
                 <li>
-                    <button class="btn btn-primary" onClick={() => this.props.onRefreshBoard(this.props.game_id)}>
+                    <button className="btn btn-primary" onClick={() => this.props.onRefreshBoard(this.props.game_id)}>
                         refresh
                     </button>
                 </li>

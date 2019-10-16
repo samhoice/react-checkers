@@ -17,7 +17,7 @@ import {
 
 const axios = require("axios")
 
-const BASE_URL = "/checkers/api"
+const BASE_URL = "http://159.65.162.6:80/checkers/api"
 const GAMES_ENDPOINT = "games"
 const USER_ENDPOINT = "users"
 const MOVE_ACTION = "move"
@@ -27,7 +27,9 @@ function API_requestBoard(id) {
     var url = [BASE_URL, GAMES_ENDPOINT, id].join("/")
     url = url.endsWith('/') ? url : url + "/"
     return axios
-        .get(url)
+        .get(url, {
+            withCredentials: true
+        })
         .then(response => ({ response }))
         .catch(error => ({ error }))
 }
@@ -61,7 +63,8 @@ function API_makeMove(game_id, endpoint, path) {
         data: {
             from_sq: path['from_sq'],
             to_sq: path['to_sq']
-        }
+        },
+        withCredentials: true,
     })
         .then(response => ({ response }))
         .catch(error => ({ error }))
@@ -114,6 +117,7 @@ function API_userList() {
     return axios({
         method: "get",
         url: url,
+        withCredentials: true,
     })
         .then(response => ({ response }))
         .catch(error => ({ error }))

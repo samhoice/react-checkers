@@ -36,10 +36,12 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_auth',
     'api',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -119,4 +121,9 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = STATIC_URL + "frontend/index.html"
 LOGOUT_REDIRECT_URL = LOGIN_URL
 
+CORS_ORIGIN_WHITELIST = [
+        'http://159.65.162.6:3000',
+#        'http://159.65.162.6',
+        ]
+CORS_ALLOW_CREDENTIALS = True
 #ASGI_APPLICATION = 'backend.routing.application'

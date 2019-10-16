@@ -1,0 +1,50 @@
+version: '3.1'
+
+services:
+  db:
+    image: mariadb
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 2opkj2ertcznsskjxiojc
+    volumes:
+      - ./maria-data:/var/lib/mysql
+    networks:
+      - internal
+    logging:                              
+      options:                            
+        max-size: "500k"                  
+        max-file: "1"                     
+
+  web:
+    build: .
+    command: python backend/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "80:8000"
+    networks:
+      - internal
+    logging:                              
+      options:                            
+        max-size: "500k"                  
+        max-file: "1"                     
+
+  frontend:
+    image: node:10                        
+    volumes:                              
+      - './frontend:/app'    
+    networks:                             
+      - internal                          
+    ports:                                
+      - '3000:3000'                       
+    user: 'node'                          
+    command: sh -c 'npm i && npm run start' 
+    working_dir: '/app'                   
+    logging:                              
+      options:                            
+        max-size: "500k"                  
+        max-file: "1"                     
+
+networks:
+  internal:

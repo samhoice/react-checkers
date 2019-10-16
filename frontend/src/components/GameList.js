@@ -6,6 +6,8 @@ import { HashRouter as Router, Route, Link } from "react-router-dom"
 
 const axios = require("axios")
 
+const BASE_URL = 'http://159.65.162.6:80/checkers/api'
+
 class GameListItem extends Component {
     render() {
         return (
@@ -45,8 +47,12 @@ class GameList extends Component {
     }
 
     componentWillMount() {
+        var url = [BASE_URL, 'games'].join("/")
+        url = url.endsWith('/') ? url : url + "/"
         axios
-            .get("/checkers/api/games/")
+            .get(url, {
+                    withCredentials: true,
+                })
             .then(response => {
                 this.processList(response)
             })

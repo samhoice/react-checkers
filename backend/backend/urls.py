@@ -36,7 +36,7 @@ authpatterns = [
         ),
 ]
 
-apipatterns = router.urls + authpatterns + [ ]
+apipatterns = router.urls + [ ]
 
 
 urlpatterns = [
@@ -44,7 +44,7 @@ urlpatterns = [
         path('admin/', admin.site.urls),
         path('api/', include(apipatterns)),
 
-        #path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+        path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
         # token auth for external clients
         path('rest-auth/', include('rest_auth.urls')),
 

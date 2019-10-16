@@ -3,3 +3,6 @@ django-rest-auth==0.9.5
 djangorestframework==3.10.3
 pytz==2019.2
 six==1.12.0
+django-extensions==2.2.2
+mysqlclient>=1,<2
+django-cors-headers>=3.1,<4

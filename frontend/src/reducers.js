@@ -129,7 +129,7 @@ export function userState(state = initialUserState, action) {
         case USER_LIST_SUCCESS:
             return { ...state, userList: action.userList }
         case USER_LIST_FAILURE:
-            return { ... state, userList: [] }
+            return { ...state, userList: [] }
         default:
             return state
     }
