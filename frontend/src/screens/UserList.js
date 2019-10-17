@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import { Container, Row, Col } from "react-bootstrap"
 import { ListGroup } from "react-bootstrap"
 import { connect } from "react-redux"
-import { getUserList } from "../actions"
+import { getUserList } from "../actions/index"
 
 const mapStateToProps = state => {
     return {

@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { setDebug, getCurrentBoard } from "../actions"
+import { setDebug, getCurrentBoard } from "../actions/index"
 
 const mapStateToProps = state => {
     return {

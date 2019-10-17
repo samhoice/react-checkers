@@ -16,7 +16,7 @@ import {
     USER_LIST_SUCCESS,
     USER_LIST_FAILURE,
     TOGGLE_DEBUG_SYMBOLS
-} from "./actions"
+} from "../constants/index"
 
 // UI State
 const initialUIState = {

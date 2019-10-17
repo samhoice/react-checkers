@@ -4,9 +4,9 @@ import { Navbar, Nav, NavItem } from "react-bootstrap"
 import { HashRouter as Router, Route, Redirect } from "react-router-dom"
 import { LinkContainer } from "react-router-bootstrap"
 import { connect } from "react-redux"
-import { GameList } from "./components/GameList"
-import Game from "./components/Game"
-import UserList from "./components/UserList"
+import { GameList } from "./screens/GameList"
+import Game from "./screens/Game"
+import UserList from "./screens/UserList"
 
 const mapStateToProps = state => {
     return {
@@ -58,6 +58,11 @@ class App extends Component {
                                 <NavItem>
                                     <LinkContainer to="/users/">
                                         <Nav.Link>Users</Nav.Link>
+                                    </LinkContainer>
+                                </NavItem>
+                                <NavItem>
+                                    <LinkContainer to="#">
+                                    <Nav.Link>whoami</Nav.Link>
                                     </LinkContainer>
                                 </NavItem>
                             </Nav>

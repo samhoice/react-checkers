@@ -3,7 +3,7 @@ import { Container, Row, Col } from "react-bootstrap"
 import { connect } from "react-redux"
 import ClickableBoardSquare from "../components/BoardSquare"
 import UI from "../components/UI"
-import { getCurrentBoard, setGameId } from "../actions"
+import { getCurrentBoard, setGameId } from "../actions/index"
 
 const mapStateToProps = state => {
     return {

@@ -3,7 +3,7 @@ import { Col } from "react-bootstrap"
 import { Checker } from "./Checker"
 
 import { connect } from "react-redux"
-import { setActiveSquare, makeMove, makeJump } from "../actions"
+import { setActiveSquare, makeMove, makeJump } from "../actions/index"
 //import { BoardSquare } from "../components/BoardSquare.js"
 
 const mapStateToProps = state => {
