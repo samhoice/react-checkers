@@ -1,0 +1,37 @@
+import os                                                               
+
+# change the:
+# - SECRET_KEY
+# - HOST_IP_ADDR
+# - db password
+# - db username
+# then install this file as settings_local.py
+
+SECRET_KEY = ''
+HOST_IP_ADDR = ''          
+
+DEBUG = True                                                            
+
+ALLOWED_HOSTS = [HOST_IP_ADDR]
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  
+
+# Database                                                              
+# https://docs.djangoproject.com/en/2.1/ref/settings/#databases         
+DATABASES = {                                                           
+    'default': {                                                        
+        'ENGINE': 'django.db.backends.mysql',                         
+        'NAME': 'checkers',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'db',
+        'PORT': ''
+    }                                                                   
+}   
+
+
+CORS_ORIGIN_WHITELIST = [
+    "http://{}:3000".format(HOST_IP_ADDR),
+]
+CORS_ALLOW_CREDENTIALS = True
+

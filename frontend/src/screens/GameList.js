@@ -2,11 +2,12 @@ import React, { Component } from "react"
 import { Container, Row, Col } from "react-bootstrap"
 // eslint-disable-next-line
 import { HashRouter as Router, Route, Link } from "react-router-dom"
-// if I don't import all three, link doesn't work right.
+
+import * as api from '../api'
+import Cookies from "js-cookie"
 
 const axios = require("axios")
 
-const BASE_URL = 'http://159.65.162.6:80/checkers/api'
 
 class GameListItem extends Component {
     render() {
@@ -47,7 +48,7 @@ class GameList extends Component {
     }
 
     componentWillMount() {
-        var url = [BASE_URL, 'games'].join("/")
+        var url = [api.BASE_URL, api.GAMES_ENDPOINT].join("/")
         url = url.endsWith('/') ? url : url + "/"
         axios
             .get(url, {
@@ -64,21 +65,19 @@ class GameList extends Component {
     createGame(e) {
         e.preventDefault()
 
-        axios
-            .post(
-                "/checkers/api/games/",
-                {},
-                {
-                    xsrfCookieName: "csrftoken",
-                    xsrfHeaderName: "X-CSRFToken"
-                }
-            )
-            .then(response => {
-                this.processListItem(response)
-            })
-            .catch(function(error) {
-                console.log(error)
-            })
+        var url = [api.BASE_URL, api.GAMES_ENDPOINT].join("/")
+        url = url.endsWith('/') ? url : url + "/"
+        var csrftoken = Cookies.get('csrftoken')
+        axios({
+            method: 'post',
+            url: url,
+            withCredentials: true,
+            headers: {"X-CSRFToken": csrftoken}
+        }).then(response => {
+            this.processListItem(response)
+        }).catch(function(error) {
+            console.log(error)
+        })
     }
 
     render() {
