@@ -2,7 +2,7 @@ import Cookies from "js-cookie"
 
 const axios = require("axios")
 
-export const BASE_URL = "http://157.245.95.205:80/checkers/api"
+export const BASE_URL = "http://167.71.174.238:80/checkers/api"
 export const GAMES_ENDPOINT = "games"
 const USER_ENDPOINT = "users"
 

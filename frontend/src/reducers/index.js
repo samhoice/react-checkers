@@ -122,7 +122,8 @@ export function moveReducer(state = initialMoveState, action) {
 }
 
 const initialUserState = {
-    userList: []
+    activeUser: 'Not Logged In',
+    userList: [],
 }
 export function userState(state = initialUserState, action) {
     switch (action.type) {
