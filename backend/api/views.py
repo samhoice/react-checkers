@@ -8,6 +8,9 @@ from rest_framework import permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
 from .models import (Game,
                      Board,
                      Turn,
@@ -74,6 +77,12 @@ class GameViewSet(mixins.CreateModelMixin,
                             turn=turn)
                 move.save()
                 board_serializer = BoardSerializer(board)
+
+                channel_layer = get_channel_layer()
+                async_to_sync(channel_layer.group_send)("notifier", 
+                        {'type': "notification",
+                            'data': "next_move"})
+
                 return Response({"move": serializer.data,
                                  "board": board_serializer.data,
                                  "turn": game.getTurnNum()})
@@ -134,6 +143,12 @@ class GameViewSet(mixins.CreateModelMixin,
                 elif winner:
                     Game.winner = Game.white_player
                     Game.save()
+
+                if turn.complete:
+                    channel_layer = get_channel_layer()
+                    async_to_sync(channel_layer.group_send)("notifier", 
+                        {'type': "notification",
+                            'data': "next_move"})
 
                 board_serializer = BoardSerializer(board)
                 return Response({"jump": serializer.data,

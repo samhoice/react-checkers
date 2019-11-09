@@ -122,3 +122,11 @@ LOGIN_REDIRECT_URL = STATIC_URL + "frontend/index.html"
 LOGOUT_REDIRECT_URL = LOGIN_URL
 
 ASGI_APPLICATION = 'backend.routing.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('redis', 6379)],
+        },
+    },
+}

@@ -46,5 +46,10 @@ services:
         max-size: "500k"                  
         max-file: "1"                     
 
+  redis:
+    image: redis:2.8
+    networks:
+      - internal
+
 networks:
   internal:

@@ -7,3 +7,4 @@ django-extensions==2.2.2
 mysqlclient>=1,<2
 django-cors-headers>=3.1,<4
 channels>=2.3,<3
+channels_redis>=2.4,<3
