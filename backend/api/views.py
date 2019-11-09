@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.views.generic import DetailView
 
 from rest_framework import status, viewsets, mixins
 from rest_framework import permissions
@@ -27,6 +28,10 @@ class UserViewSet(viewsets.ModelViewSet):
 
     permission_classes = (permissions.IsAuthenticated,)
 
+    @action(detail=False)
+    def me(self, request, *args, **kwargs):
+        serializer = self.get_serializer(request.user)
+        return Response(serializer.data)
 
 class GameViewSet(mixins.CreateModelMixin,
                   mixins.RetrieveModelMixin,

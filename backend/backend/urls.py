@@ -36,8 +36,7 @@ authpatterns = [
         ),
 ]
 
-apipatterns = router.urls + [ ]
-
+apipatterns = router.urls + [ ] 
 
 urlpatterns = [
     path('checkers/', include([

@@ -2,7 +2,8 @@ import Cookies from "js-cookie"
 
 const axios = require("axios")
 
-export const BASE_URL = "http://167.71.174.238:80/checkers/api"
+export const HOSTNAME = "167.71.174.238:80"
+export const BASE_URL = "http://" + HOSTNAME + "/checkers/api"
 export const GAMES_ENDPOINT = "games"
 const USER_ENDPOINT = "users"
 
@@ -49,4 +50,17 @@ export function userList() {
     })
         .then(response => ({ response }))
         .catch(error => ({ error }))
+}
+
+export function getActiveUser() {
+    console.log("api.getActiveUser")
+    var url = [BASE_URL, USER_ENDPOINT, "me"].join("/")
+    url = url.endsWith('/') ? url : url + "/"
+    return axios({
+        method: "get",
+        url: url,
+        withCredentials: true,
+    })
+    .then(response => ({ response }))
+    .catch(error => ({ error }))
 }

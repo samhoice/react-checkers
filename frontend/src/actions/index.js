@@ -17,10 +17,21 @@ USER_LIST_REQUESTED,
 USER_LIST_SUCCESS,
 USER_LIST_FAILURE,
 
+ACTIVE_USER_REQUESTED,
+ACTIVE_USER_SUCCESS,
+ACTIVE_USER_FAILURE,
+
 TOGGLE_DEBUG_SYMBOLS,
 
+SOCKET_CREATE_REQUESTED,
+SOCKET_OPEN,
+SOCKET_MESSAGE_RECV,
+SOCKET_MESSAGE_SEND,
+SOCKET_ERR,
 
 } from '../constants/index'
+
+
 export function setGameId(id) {
     return { type: SET_GAME_ID, id}
 }
@@ -67,18 +78,45 @@ export function jumpFail(e) {
     return { type: JUMP_REQUEST_FAILURE, e }
 }
 
+// USER LIST
 export function getUserList() {
     return { type: USER_LIST_REQUESTED }
 }
-
 export function userListSuccess(list) {
     return { type: USER_LIST_SUCCESS, list }
 }
-
 export function userListFail(e) {
     return { type: USER_LIST_FAILURE, e }
 }
 
+// ACTIVE_USER
+export function getActiveUser() {
+    return { type: ACTIVE_USER_REQUESTED }
+}
+export function activeUserSuccess(payload) {
+    return { type: ACTIVE_USER_SUCCESS, payload }
+}
+export function activeUserFailure(payload) {
+    return { type: ACTIVE_USER_FAILURE, payload }
+}
+
+// debug
 export function setDebug(value) {
     return { type: TOGGLE_DEBUG_SYMBOLS, value }
+}
+
+export function socketCreateRequested(payload) {
+    return { type: SOCKET_CREATE_REQUESTED, payload }
+}
+export function socketOpen(payload) {
+    return { type: SOCKET_OPEN, payload }
+}
+export function socketMessageRecv(payload) {
+    return { type: SOCKET_MESSAGE_RECV, payload }
+}
+export function socketMessageSend(payload) {
+    return { type: SOCKET_MESSAGE_SEND, payload }
+}
+export function socketError(payload) {
+    return { type: SOCKET_ERR, payload }
 }

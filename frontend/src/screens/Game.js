@@ -1,76 +1,58 @@
 import React, { Component } from "react"
 import { Container, Row, Col } from "react-bootstrap"
 import { connect } from "react-redux"
-import ClickableBoardSquare from "../components/BoardSquare"
 import UI from "../components/UI"
+import Board from "../components/Board"
+import Chat from "../components/Chat"
 import { getCurrentBoard, setGameId } from "../actions/index"
 
+
+class Game extends Component {
+
+  componentWillMount() {
+    this.props.setGameId(this.props.match.params.id)
+    this.props.getBoard(this.props.match.params.id)
+  }
+
+  render() {
+    return (
+      <Container fluid='true'>
+        <Row>
+          <Col xs={2} sm={1}>
+            <UI />
+          </Col>
+          <Col xs={12} sm={8}>
+            <Board 
+              boardState={this.props.boardState} />
+          </Col>
+          <Col xs={4} sm={3}>
+            <Chat />
+          </Col>
+        </Row>
+      </Container>
+    )
+  }
+}
+
 const mapStateToProps = state => {
-    return {
-        gameId: state.uiState.game_id,
-        boardState: state.gameState.layout
-    }
+  return {
+    gameId: state.uiState.game_id,
+    boardState: state.gameState.layout
+  }
 }
 
 const mapDispatchToProps = dispatch => {
-    return {
-        getBoard: id => {
-            dispatch(getCurrentBoard(id))
-        },
-        setGameId: id => {
-            dispatch(setGameId(id))
-        },
-    }
-}
-
-class Game extends Component {
-    componentWillMount() {
-        this.props.setGameId(this.props.match.params.id)
-        this.props.getBoard(this.props.match.params.id)
-    }
-
-    render() {
-        return (
-            <div>
-                <Board boardState={this.props.boardState} />
-            </div>
-        )
-    }
-}
-
-class Board extends Component {
-    render() {
-        var board = this.props.boardState.slice()
-        // Draw the board from the top down
-        board.reverse()
-        return (
-            <Container>
-                <Row>
-                <Col xs={2}>
-                    <UI></UI>
-                </Col>
-                <Col xs={8}>
-                {board.map((row, i) => (
-                    <Row className="checker-row">
-                        {row.map((sq, j) => (
-                            <ClickableBoardSquare
-                                key={"" + j.toString() + (7 - i).toString()}
-                                id={"UI-" + j.toString() + (7 - i).toString()}
-                                square={sq}
-                            />
-                        ))}
-                    </Row>
-                ))}
-                </Col>
-                <Col xs={2}>
-                </Col>
-                </Row>
-            </Container>
-        )
-    }
+  return {
+    getBoard: id => {
+      dispatch(getCurrentBoard(id))
+    },
+    setGameId: id => {
+      dispatch(setGameId(id))
+    },
+  }
 }
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(Game)

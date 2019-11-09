@@ -93,10 +93,8 @@ class BoardSquare extends Component {
     }
 }
 
-const ClickableBoardSquare = connect(
+export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(BoardSquare)
 
-export { BoardSquare }
-export default ClickableBoardSquare

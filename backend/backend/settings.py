@@ -24,6 +24,7 @@ from .settings_local import *
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -31,7 +32,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    #'channels',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
@@ -121,4 +121,4 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = STATIC_URL + "frontend/index.html"
 LOGOUT_REDIRECT_URL = LOGIN_URL
 
-#ASGI_APPLICATION = 'backend.routing.application'
+ASGI_APPLICATION = 'backend.routing.application'

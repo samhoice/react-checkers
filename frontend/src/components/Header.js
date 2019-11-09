@@ -26,7 +26,7 @@ class Header extends Component {
           </NavItem>
           <NavItem>
             <LinkContainer to="#">
-            <Nav.Link>{ this.props.activeUser }</Nav.Link>
+            <Nav.Link>{ this.props.activeUser.name }</Nav.Link>
             </LinkContainer>
           </NavItem>
         </Nav>

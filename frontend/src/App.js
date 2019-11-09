@@ -1,11 +1,13 @@
 import React, { Component } from "react"
-import "./App.css"
+import { connect } from "react-redux"
 import { BrowserRouter, Route } from "react-router-dom"
 import { GameList } from "./screens/GameList"
 import Header from "./components/Header"
 import Game from "./screens/Game"
 import UserList from "./screens/UserList"
 import NowPlaying from "./components/NowPlaying"
+import { getActiveUser } from "./actions/index"
+import "./App.css"
 
 class App extends Component {
   constructor(props) {
@@ -13,6 +15,10 @@ class App extends Component {
     this.state = {
       now_playing: 0
     }
+  }
+
+  componentDidMount() {
+    this.props.getActiveUser()
   }
 
   render() {
@@ -32,4 +38,20 @@ class App extends Component {
   }
 }
 
-export default App
+const mapStateToProps = state => {
+  return {
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    getActiveUser: id => {
+      dispatch(getActiveUser())
+    },
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App)

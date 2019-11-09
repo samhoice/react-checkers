@@ -15,7 +15,11 @@ import {
     USER_LIST_REQUESTED,
     USER_LIST_SUCCESS,
     USER_LIST_FAILURE,
-    TOGGLE_DEBUG_SYMBOLS
+    TOGGLE_DEBUG_SYMBOLS,
+    ACTIVE_USER_REQUESTED,
+    ACTIVE_USER_SUCCESS,
+    ACTIVE_USER_FAILURE,
+    SOCKET_MESSAGE_RECV,
 } from "../constants/index"
 
 // UI State
@@ -122,7 +126,10 @@ export function moveReducer(state = initialMoveState, action) {
 }
 
 const initialUserState = {
-    activeUser: 'Not Logged In',
+    activeUser: {
+        name: "not logged in",
+        id: ''
+    },
     userList: [],
 }
 export function userState(state = initialUserState, action) {
@@ -131,6 +138,28 @@ export function userState(state = initialUserState, action) {
             return { ...state, userList: action.userList }
         case USER_LIST_FAILURE:
             return { ...state, userList: [] }
+        case ACTIVE_USER_SUCCESS:
+            return { ...state, activeUser: {
+                    name: action.payload.username,
+                    id: action.payload.id 
+                }
+            }
+        case ACTIVE_USER_FAILURE:
+            return { ...state, activeUser: {}}
+        default:
+            return state
+    }
+}
+
+const initialMessageState = {
+    messages: [],
+    error: '',
+}
+
+export function messageState(state = initialMessageState, action) {
+    switch(action.type) {
+        case SOCKET_MESSAGE_RECV:
+            return { ...state, messages: [...state.messages, action.payload] }
         default:
             return state
     }
@@ -139,7 +168,8 @@ export function userState(state = initialUserState, action) {
 const rootReducer = combineReducers({
     uiState,
     gameState,
-    userState
+    userState,
+    messageState,
 })
 
 export default rootReducer
