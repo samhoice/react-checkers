@@ -15,7 +15,12 @@ class Chat extends Component {
     e.preventDefault()
     console.log("chat button")
 
-    this.props.sendMessage(this.state.message)
+    let payload = {
+        game_id: this.props.game_id,
+        message: this.state.message
+    }
+
+    this.props.sendMessage(payload)
   }
 
   render () {
@@ -43,7 +48,8 @@ class Chat extends Component {
   }
 }
 
-const mapStateToProps = ({ messageState }) => ({
+const mapStateToProps = ({ messageState, uiState }) => ({
+  game_id: uiState.game_id,
   messages: messageState.messages,
   error: messageState.error
 })

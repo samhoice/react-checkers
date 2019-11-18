@@ -80,8 +80,8 @@ class GameViewSet(mixins.CreateModelMixin,
 
                 channel_layer = get_channel_layer()
                 async_to_sync(channel_layer.group_send)("notifier", 
-                        {'type': "notification",
-                            'data': "next_move"})
+                        {'type': "notify.turn",
+                            'message': "{},{}".format(game.id, game.getTurnNum())})
 
                 return Response({"move": serializer.data,
                                  "board": board_serializer.data,
@@ -138,17 +138,17 @@ class GameViewSet(mixins.CreateModelMixin,
 
                 winner = Checkers.checkWin(new_layout)
                 if winner and winner == 'b':
-                    Game.winner = Game.black_player
-                    Game.save()
+                    game.winner = game.black_player
+                    game.save()
                 elif winner:
-                    Game.winner = Game.white_player
-                    Game.save()
+                    game.winner = game.white_player
+                    game.save()
 
                 if turn.complete:
                     channel_layer = get_channel_layer()
                     async_to_sync(channel_layer.group_send)("notifier", 
-                        {'type': "notification",
-                            'data': "next_move"})
+                        {'type': "notify.turn",
+                            'message': "{},{}".format(game.id, game.getTurnNum())})
 
                 board_serializer = BoardSerializer(board)
                 return Response({"jump": serializer.data,

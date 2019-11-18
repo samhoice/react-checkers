@@ -1,7 +1,10 @@
 import { take, put, call, takeEvery } from 'redux-saga/effects'
 import { eventChannel } from 'redux-saga'
 import { connectSocket } from '../stream/index'
-import { SOCKET_MESSAGE_RECV, SOCKET_MESSAGE_SEND } from '../constants/index'
+import { SOCKET_MESSAGE_RECV, 
+    SOCKET_SYSTEM_MESSAGE_RECV,
+    SOCKET_MESSAGE_SEND,
+    BOARD_REQUESTED } from '../constants/index'
 
 // this function creates an event channel from a given socket
 // Setup subscription to incoming `ping` events
@@ -13,7 +16,7 @@ function createSocketChannel(socket) {
     const messageHandler = (event) => {
       // puts event payload into the channel
       // this allows a Saga to take this payload from the returned channel
-      emit(JSON.parse(event.data).message)
+      emit(JSON.parse(event.data))
     }
   
     const errorHandler = (errorEvent) => {
@@ -48,7 +51,9 @@ export function* socketReadSaga(action) {
   const socketChannel = yield call(createSocketChannel, socket)
 
   const socketWrite  = function(action) {
-    socket.send(JSON.stringify({'message': action.payload}))
+    console.log("socket sending")
+    console.log(action.payload)
+    socket.send(JSON.stringify({...action.payload}))
   }
   
   yield takeEvery(SOCKET_MESSAGE_SEND, socketWrite)
@@ -57,8 +62,12 @@ export function* socketReadSaga(action) {
     console.log("socket read saga loop")
     try {
       const payload = yield take(socketChannel)
-      yield put({ type: SOCKET_MESSAGE_RECV, payload })
-//      yield fork(pong, socket)
+      if(payload.type === 'chat.message') {
+        yield put({ type: SOCKET_MESSAGE_RECV, message: payload.message })
+      } else {
+        yield put({ type: SOCKET_SYSTEM_MESSAGE_RECV, message: payload.message })
+        yield put({ type: BOARD_REQUESTED })
+      }
     } catch(err) {
       console.error('socket error:', err)
       // socketChannel is still open in catch block
@@ -68,6 +77,3 @@ export function* socketReadSaga(action) {
   }
 }
 
-export function* socketWriteSaga(action) {
-  console.log("socketWriteSaga" + action.payload)
-}
