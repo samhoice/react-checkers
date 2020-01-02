@@ -37,7 +37,8 @@ class Game extends Component {
 const mapStateToProps = state => {
   return {
     gameId: state.uiState.game_id,
-    boardState: state.gameState.layout
+    //boardState: state.gameState.layout
+    boardState: state.gameState.game.board_set[0].layout.slice(),
   }
 }
 

@@ -63,10 +63,20 @@ export function* socketReadSaga(action) {
     try {
       const payload = yield take(socketChannel)
       if(payload.type === 'chat.message') {
-        yield put({ type: SOCKET_MESSAGE_RECV, message: payload.message })
+        console.log("chat message ")
+        yield put({
+          type: SOCKET_MESSAGE_RECV,
+          sender: payload.sender,
+          message: payload.message })
       } else {
-        yield put({ type: SOCKET_SYSTEM_MESSAGE_RECV, message: payload.message })
-        yield put({ type: BOARD_REQUESTED })
+        console.log("system message")
+        // sender should always be 0...
+        yield put({
+          type: SOCKET_SYSTEM_MESSAGE_RECV,
+          sender: payload.sender,
+          message: payload.message })
+        let turn_message = payload.message.split(',')
+        yield put({ type: BOARD_REQUESTED, game_id: turn_message[0] })
       }
     } catch(err) {
       console.error('socket error:', err)

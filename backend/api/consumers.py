@@ -9,7 +9,6 @@ class NotificationConsumer(WebsocketConsumer):
         return  self.game_group_string.format(game_id)
 
     def connect(self):
-
         games_as_black = self.scope['user'].b_player_set.filter(winner__isnull=True)
         games_as_white = self.scope['user'].w_player_set.filter(winner__isnull=True)
 
@@ -19,6 +18,7 @@ class NotificationConsumer(WebsocketConsumer):
 
         self.game_list = game_list
 
+        # TODO: get rid of notifier group
         self.notifier_group = "notifier"
         async_to_sync(self.channel_layer.group_add)(
             self.notifier_group,
@@ -35,6 +35,7 @@ class NotificationConsumer(WebsocketConsumer):
         self.accept()
         self.send(text_data=json.dumps({
             'type': 'chat.message',
+            'sender': 0,
             'message': "hello from the server"}))
 
     def disconnect(self, close_code):
@@ -62,16 +63,31 @@ class NotificationConsumer(WebsocketConsumer):
             group_name,
             {
                 'type': 'chat.message',
+                'sender': self.scope['user'].id,
                 'message': message,
             }
         )
 
     def notify_turn(self, event):
+        print("notify_turn")
         # this name is used in the group to decide what to parse (type)
         print(event.keys())
         message = event['message']
 
         self.send(text_data=json.dumps({
             'type': 'notify.turn',
+            'sender': 0,
+            'message': message,
+        }))
+
+    def chat_message(self, event):
+        
+        message = event['message']
+        sender = event['sender']
+
+        print("chat_message {} {}".format(sender, message))
+        self.send(text_data=json.dumps({
+            'type': 'chat.message',
+            'sender': sender,
             'message': message,
         }))

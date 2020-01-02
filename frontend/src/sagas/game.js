@@ -11,12 +11,14 @@ import {
 import * as api from '../api'
 
 export function* getBoard(action) {
+    console.log("getBoard game_id " + action.game_id)
     const { response, error } = yield call(api.requestBoard, action.game_id)
     if (response) {
         yield put({
             type: BOARD_RECEIVE_SUCCESS,
+            game: response.data,
             game_id: response.data.id,
-            board: response.data.board_set[0].layout,
+            //board: response.data.board_set[0].layout,
             turn: response.data.turn
         })
     } else {

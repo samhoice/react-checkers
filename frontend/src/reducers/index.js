@@ -20,6 +20,7 @@ import {
     ACTIVE_USER_SUCCESS,
     ACTIVE_USER_FAILURE,
     SOCKET_MESSAGE_RECV,
+    SOCKET_SYSTEM_MESSAGE_RECV,
 } from "../constants/index"
 
 // UI State
@@ -50,8 +51,8 @@ export function uiState(state = initialUIState, action) {
             return { ...state, 
                 status: "200", 
                 emessage: "",
-                game_id: action.game_id,
-                turn_num: action.turn, 
+                game_id: action.game.id,
+                turn_num: action.game.turn, 
                 req_pending: false }
         case BOARD_RECEIVE_FAILURE:
             return { ...state, 
@@ -70,8 +71,6 @@ export function uiState(state = initialUIState, action) {
             return { ...state, 
                 status: "200", 
                 emessage: "",
-                active_sq: "", 
-                turn_num: action.turn, 
                 req_pending: false}
         case MOVE_REQUEST_FAILURE:
         case JUMP_REQUEST_FAILURE:
@@ -99,14 +98,39 @@ const initialBoardLayout = {
     ],
     req_pending: false,
     result: "",
-    error: ""
+    error: "",
+    game: {
+        id: 0,
+        white_player: 0,
+        black_player: 0,
+        winner: null,
+        board_set: [
+            {
+                id: 0,
+                layout: [
+                    [1, 0, 1, 0, 1, 0, 1, 0],
+                    [0, 1, 0, 1, 0, 1, 0, 1],
+                    [1, 0, 1, 0, 1, 0, 1, 0],
+                    [0, 1, 0, 1, 0, 1, 0, 1],
+                    [1, 0, 1, 0, 1, 0, 1, 0],
+                    [0, 1, 0, 1, 0, 1, 0, 1],
+                    [1, 0, 1, 0, 1, 0, 1, 0],
+                    [0, 1, 0, 1, 0, 1, 0, 1]
+                ]
+            },
+        ]
+    }
 }
 export function gameState(state = initialBoardLayout, action) {
     switch (action.type) {
         case BOARD_REQUESTED:
             return { ...state, req_pending: true }
         case BOARD_RECEIVE_SUCCESS:
-            return { ...state, layout: action.board.slice(), req_pending: false }
+            return { 
+              ...state,
+              game: action.game,
+              //layout: action.board.slice(), 
+              req_pending: false }
         case BOARD_RECEIVE_FAILURE:
             return { ...state, error: action.error.message, req_pending: false }
         case MOVE_REQUEST_SUCCESS:
@@ -159,7 +183,10 @@ const initialMessageState = {
 export function messageState(state = initialMessageState, action) {
     switch(action.type) {
         case SOCKET_MESSAGE_RECV:
-            return { ...state, messages: [...state.messages, action.payload] }
+            return { ...state, messages: [...state.messages, [action.sender, action.message]] }
+        case SOCKET_SYSTEM_MESSAGE_RECV:
+            // should look like <game_id>,<turn>
+            return { ...state, messages: [...state.messages, "Next turn!"] }
         default:
             return state
     }

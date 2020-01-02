@@ -79,6 +79,7 @@ class GameViewSet(mixins.CreateModelMixin,
                 board_serializer = BoardSerializer(board)
 
                 channel_layer = get_channel_layer()
+                # TODO: this should send to the group for the game, not "notifier"
                 async_to_sync(channel_layer.group_send)("notifier", 
                         {'type': "notify.turn",
                             'message': "{},{}".format(game.id, game.getTurnNum())})

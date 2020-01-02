@@ -3,6 +3,7 @@ import { connect } from "react-redux"
 import { Form, ListGroup, Button } from "react-bootstrap"
 
 import { socketMessageSend } from "../actions/index"
+import UserName from "../components/UserName"
 
 
 
@@ -21,14 +22,18 @@ class Chat extends Component {
     }
 
     this.props.sendMessage(payload)
+    e.target.reset()
   }
 
   render () {
     return (
       <div>
         <ListGroup>
-        {this.props.messages.map(message => (
-            <ListGroup.Item>{message}</ListGroup.Item>
+        {this.props.messages.map((message, id) => (
+            <ListGroup.Item key={id}>
+              <UserName user_id={message[0]}/>&nbsp;
+              {message[1]}
+            </ListGroup.Item>
           ))}
         </ListGroup>
         <Form onSubmit={(e) => this.onSubmit(e)} method={"post"}>

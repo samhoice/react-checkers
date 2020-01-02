@@ -3,6 +3,7 @@ import { Container, Row, Col } from "react-bootstrap"
 // eslint-disable-next-line
 import { HashRouter as Router, Route, Link } from "react-router-dom"
 
+import UserName from "../components/UserName"
 import * as api from '../api'
 import Cookies from "js-cookie"
 
@@ -18,7 +19,9 @@ class GameListItem extends Component {
             {this.props.game.id}
           </Col>
           <Col>
-            {this.props.game.winner}
+            <UserName
+              user_id = {this.props.game.winner}
+            />
           </Col>
           <Col>
             {this.props.game.created}
