@@ -5,6 +5,7 @@ import { GameList } from "./screens/GameList"
 import Header from "./components/Header"
 import Game from "./screens/Game"
 import UserList from "./screens/UserList"
+import Login from "./screens/Login"
 import NowPlaying from "./components/NowPlaying"
 import { getActiveUser } from "./actions/index"
 import "./App.css"
@@ -30,7 +31,8 @@ class App extends Component {
             <Route exact path="/" component={NowPlaying} />
             <Route exact path="/game/" component={GameList} />
             <Route path="/game/:id" component={Game} />
-            <Route path="/users/" component={UserList} />
+            <Route exact path="/users/" component={UserList} />
+            <Route path="/users/login" component={Login} />
           </div>
         </BrowserRouter>
       </div>

@@ -1,4 +1,12 @@
 import {
+LOGIN_REQUESTED,
+LOGIN_SUCCESS,
+LOGIN_FAILED,
+
+LOGOUT_REQUESTED,
+LOGOUT_SUCCESS,
+LOGOUT_FAILED,
+
 BOARD_REQUESTED,
 BOARD_RECEIVE_SUCCESS,
 BOARD_RECEIVE_FAILURE,
@@ -31,6 +39,14 @@ SOCKET_ERR,
 
 } from '../constants/index'
 
+
+export function loginSend(payload) {
+    return { type: LOGIN_REQUESTED, payload }
+}
+
+export function logoutSend(payload=null) {
+    return { type: LOGOUT_REQUESTED, payload }
+}
 
 export function setGameId(id) {
     return { type: SET_GAME_ID, id}

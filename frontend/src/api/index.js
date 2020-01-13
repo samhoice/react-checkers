@@ -5,7 +5,9 @@ const axios = require("axios")
 export const HOSTNAME = "localhost:80"
 export const BASE_URL = "http://" + HOSTNAME + "/checkers/api"
 export const GAMES_ENDPOINT = "games"
-const USER_ENDPOINT = "users"
+export const USER_ENDPOINT = "users"
+export const LOGIN_ENDPOINT = "rest-auth/login"
+export const LOGOUT_ENDPOINT = "rest-auth/logout"
 
 export const MOVE_ACTION = "move"
 export const JUMP_ACTION = "jump"
@@ -59,6 +61,42 @@ export function getActiveUser() {
     return axios({
         method: "get",
         url: url,
+        withCredentials: true,
+    })
+    .then(response => ({ response }))
+    .catch(error => ({ error }))
+}
+
+export function login(payload) {
+    console.log("api.login")
+    console.log(payload)
+    var url = [BASE_URL, LOGIN_ENDPOINT].join("/")
+    url = url.endsWith('/') ? url : url + "/"
+    var csrftoken = Cookies.get('csrftoken')
+    console.log(url)
+    return axios({
+        method: "post",
+        url: url,
+        headers: {'X-CSRFToken': csrftoken},
+        data: {
+            username: payload['username'],
+            password: payload['password']
+        },
+        withCredentials: true,
+    })
+    .then(response => ({ response }))
+    .catch(error => ({ error }))
+}
+
+export function logout(payload) {
+    var url = [BASE_URL, LOGOUT_ENDPOINT].join("/")
+    url = url.endsWith('/') ? url : url + "/"
+    var csrftoken = Cookies.get('csrftoken')
+    console.log(url)
+    return axios({
+        method: "post",
+        url: url,
+        headers: {'X-CSRFToken': csrftoken},
         withCredentials: true,
     })
     .then(response => ({ response }))

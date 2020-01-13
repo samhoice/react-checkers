@@ -1,7 +1,8 @@
 import React, { Component } from "react"
-import { Container, Row, Col } from "react-bootstrap"
+import { Container, Row, Col, Table } from "react-bootstrap"
 // eslint-disable-next-line
 import { HashRouter as Router, Route, Link } from "react-router-dom"
+import { Redirect } from "react-router-dom"
 
 import UserName from "../components/UserName"
 import * as api from '../api'
@@ -11,23 +12,41 @@ const axios = require("axios")
 
 
 class GameListItem extends Component {
+  state = {
+      next_game: null
+  }
   render() {
+    if(this.state.next_game) {
+      return <Redirect to={"/game/" + this.state.next_game} />
+    }
     return (
-      <Link to={"/game/" + this.props.game.id}>
-        <Row>
-          <Col>
+        <tr onClick={ e=> {
+            this.setState({ next_game: this.props.game.id})
+        }}>
+          <td>
+            <a href={"/game/" + this.props.game.id}>
             {this.props.game.id}
-          </Col>
-          <Col>
+            </a>
+          </td>
+          <td>
+            <UserName
+              user_id = {this.props.game.black_player}
+            />
+          </td>
+          <td>
+            <UserName
+              user_id = {this.props.game.white_player}
+            />
+          </td>
+          <td>
             <UserName
               user_id = {this.props.game.winner}
             />
-          </Col>
-          <Col>
+          </td>
+          <td>
             {this.props.game.created}
-          </Col>
-        </Row>
-      </Link>
+          </td>
+        </tr>
     )
   }
 }
@@ -93,12 +112,25 @@ class GameList extends Component {
     return (
       <Container>
         <h1>Game List</h1>
+        <Table striped bordered hover>
+        <thead>
+        <tr>
+          <th>GameID</th>
+          <th>Black</th>
+          <th>Red</th>
+          <th>Winner</th>
+          <th>Created</th>
+        </tr>
+        </thead>
+        <tbody>
         {
           this.state.gameList.map(game => (
             <GameListItem 
               key={'game_list_' +game.id + '_' + game.created} game={game} />
           ))
         }
+        </tbody>
+        </Table>
         <form onSubmit={e => this.createGame(e)}>
           <input
             className="btn btn-primary"

@@ -36,7 +36,9 @@ authpatterns = [
         ),
 ]
 
-apipatterns = router.urls + [ ] 
+apipatterns = router.urls + [ 
+        path('rest-auth/', include('rest_auth.urls')),
+    ]
 
 urlpatterns = [
     path('checkers/', include([

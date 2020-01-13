@@ -1,8 +1,8 @@
 import React, { Component } from "react"
-import { Container, Row, Col } from "react-bootstrap"
+import { Container, Row, Col, Button } from "react-bootstrap"
 import { ListGroup } from "react-bootstrap"
 import { connect } from "react-redux"
-import { getUserList } from "../actions/index"
+import { getUserList, logoutSend } from "../actions/index"
 
 const mapStateToProps = state => {
   return {
@@ -12,9 +12,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onGetUserList: id => {
-      dispatch(getUserList())
-    }
+    onGetUserList: id => { dispatch(getUserList()) },
+    onLogout: () => { dispatch(logoutSend()) }
   }
 }
 
@@ -35,7 +34,11 @@ class UserList extends Component {
         <h1>Users</h1>
         <Row>
           <Col xs={4}>
-            <a href="/checkers/auth/logout/">logout</a>
+            <Button
+              onClick={ () => {this.props.onLogout() }}
+              variant="primary">
+                Logout
+            </Button>
           </Col>
           <Col xs={6}>
             <ListGroup>

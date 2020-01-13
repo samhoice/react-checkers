@@ -21,6 +21,8 @@ import {
     ACTIVE_USER_FAILURE,
     SOCKET_MESSAGE_RECV,
     SOCKET_SYSTEM_MESSAGE_RECV,
+    LOGIN_SUCCESS,
+    LOGOUT_SUCCESS,
 } from "../constants/index"
 
 // UI State
@@ -69,6 +71,7 @@ export function uiState(state = initialUIState, action) {
         case JUMP_REQUEST_SUCCESS:
         case USER_LIST_SUCCESS:
             return { ...state, 
+                active_sq: "",
                 status: "200", 
                 emessage: "",
                 req_pending: false}
@@ -79,6 +82,8 @@ export function uiState(state = initialUIState, action) {
                 status: action.error.status, 
                 emessage: action.error.data.error,
                 req_pending: false}
+        case LOGOUT_SUCCESS:
+            return { initialUIState }
         default:
             return state
     }
@@ -136,6 +141,8 @@ export function gameState(state = initialBoardLayout, action) {
         case MOVE_REQUEST_SUCCESS:
         case JUMP_REQUEST_SUCCESS:
             return { ...state, layout: action.board.slice() }
+        case LOGOUT_SUCCESS:
+            return { initialBoardLayout }
         default:
             return state
     }
@@ -169,7 +176,12 @@ export function userState(state = initialUserState, action) {
                 }
             }
         case ACTIVE_USER_FAILURE:
-            return { ...state, activeUser: {}}
+            return { ...state, activeUser: {
+                name: "not logged in",
+                id: ''}
+            }
+        case LOGOUT_SUCCESS:
+            return initialUserState
         default:
             return state
     }
