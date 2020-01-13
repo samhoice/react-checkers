@@ -83,7 +83,7 @@ export function uiState(state = initialUIState, action) {
                 emessage: action.error.data.error,
                 req_pending: false}
         case LOGOUT_SUCCESS:
-            return { initialUIState }
+            return initialUIState
         default:
             return state
     }
@@ -142,7 +142,7 @@ export function gameState(state = initialBoardLayout, action) {
         case JUMP_REQUEST_SUCCESS:
             return { ...state, layout: action.board.slice() }
         case LOGOUT_SUCCESS:
-            return { initialBoardLayout }
+            return initialBoardLayout
         default:
             return state
     }

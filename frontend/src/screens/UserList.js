@@ -3,6 +3,7 @@ import { Container, Row, Col, Button } from "react-bootstrap"
 import { ListGroup } from "react-bootstrap"
 import { connect } from "react-redux"
 import { getUserList, logoutSend } from "../actions/index"
+import UserName from "../components/UserName"
 
 const mapStateToProps = state => {
   return {
@@ -19,7 +20,11 @@ const mapDispatchToProps = (dispatch) => {
 
 class UserListItem extends Component {
   render() {
-    return <ListGroup.Item>{this.props.user.username}</ListGroup.Item>
+    return (
+          <ListGroup.Item>
+            <UserName user_id={this.props.user.id} />
+          </ListGroup.Item>
+    )
   }
 }
 
