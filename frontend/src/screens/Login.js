@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
+import { Redirect } from "react-router-dom"
 import { Container, Row, Col } from "react-bootstrap"
 import { Form, Button } from "react-bootstrap"
 
@@ -24,6 +25,9 @@ class Login extends Component {
   }
 
   render() {
+    if(this.props.activeUserId) {
+        return <Redirect to='/game' />
+    }
     return (
       <Container fluid='true'>
         <Row>
@@ -70,11 +74,15 @@ class Login extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  activeUserId: state.userState.activeUser.id,
+})
+
 const mapDispatchToProps = dispatch => ({
   attemptLogin: payload => dispatch(loginSend(payload))
 })
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Login)

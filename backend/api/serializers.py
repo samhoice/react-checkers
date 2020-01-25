@@ -51,7 +51,10 @@ class GameListSerializer(serializers.ModelSerializer):
         read_only_fields = ('white_player', 'black_player', 'winner')
 
     def create(self, validated_data):
-        return Game.objects.create(black_player=self.context['request'].user)
+        g = Game.objects.latest('pk')
+        if g and g.pk % 2 == 1:
+            return Game.objects.create(black_player=self.context['request'].user)
+        return Game.objects.create(white_player=self.context['request'].user)
 
 class MoveSerializer(serializers.ModelSerializer):
     from_sq = serializers.CharField(min_length=2, max_length=2)

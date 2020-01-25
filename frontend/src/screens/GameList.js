@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { Container, Row, Col, Table } from "react-bootstrap"
 // eslint-disable-next-line
-import { HashRouter as Router, Route, Link } from "react-router-dom"
+import { BrowserRouter as Router, Route, Link } from "react-router-dom"
 import { Redirect } from "react-router-dom"
 
 import UserName from "../components/UserName"
@@ -17,17 +17,14 @@ class GameListItem extends Component {
   }
   render() {
     if(this.state.next_game) {
-      return <Redirect to={"/game/" + this.state.next_game} />
+      return <Redirect push to={"/game/" + this.state.next_game} />
     }
+    let  create_date = new Date(this.props.game.created)
+
     return (
         <tr onClick={ e=> {
             this.setState({ next_game: this.props.game.id})
         }}>
-          <td>
-            <a href={"/game/" + this.props.game.id}>
-            {this.props.game.id}
-            </a>
-          </td>
           <td>
             <UserName
               user_id = {this.props.game.black_player}
@@ -44,7 +41,7 @@ class GameListItem extends Component {
             />
           </td>
           <td>
-            {this.props.game.created}
+            { create_date.toLocaleString() }
           </td>
         </tr>
     )
@@ -115,7 +112,6 @@ class GameList extends Component {
         <Table striped bordered hover>
         <thead>
         <tr>
-          <th>GameID</th>
           <th>Black</th>
           <th>Red</th>
           <th>Winner</th>
