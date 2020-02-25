@@ -32,6 +32,7 @@ function createSocketChannel(socket) {
     // this will be invoked when the saga calls `channel.close` method
     const unsubscribe = () => {
       socket.removeEventListener('message')
+      socket.removeEventListener('error')
     }
     
     return unsubscribe
@@ -62,6 +63,7 @@ export function* socketReadSaga(action) {
     console.log("socket read saga loop")
     try {
       const payload = yield take(socketChannel)
+      console.log(payload.type)
       if(payload.type === 'chat.message') {
         console.log("chat message ")
         yield put({
@@ -76,7 +78,12 @@ export function* socketReadSaga(action) {
           sender: payload.sender,
           message: payload.message })
         let turn_message = payload.message.split(',')
-        yield put({ type: BOARD_REQUESTED, game_id: turn_message[0] })
+        yield put(
+          {
+            type: BOARD_REQUESTED,
+            game_id: turn_message[0]
+          }
+        )
       }
     } catch(err) {
       console.error('socket error:', err)

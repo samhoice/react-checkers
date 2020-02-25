@@ -35,6 +35,7 @@ const initialUIState = {
     status: 200,
     emessage: "",
 }
+
 export function uiState(state = initialUIState, action) {
     switch (action.type) {
         case SET_GAME_ID: 
@@ -126,6 +127,7 @@ const initialBoardLayout = {
         ]
     }
 }
+
 export function gameState(state = initialBoardLayout, action) {
     switch (action.type) {
         case BOARD_REQUESTED:
@@ -195,10 +197,22 @@ const initialMessageState = {
 export function messageState(state = initialMessageState, action) {
     switch(action.type) {
         case SOCKET_MESSAGE_RECV:
-            return { ...state, messages: [...state.messages, [action.sender, action.message]] }
+            return { ...state,
+                messages: [...state.messages,
+                    [
+                        action.sender,
+                        action.message
+                    ]
+                ]
+            }
         case SOCKET_SYSTEM_MESSAGE_RECV:
             // should look like <game_id>,<turn>
-            return { ...state, messages: [...state.messages, "Next turn!"] }
+            return { ...state,
+                // let's just eat this message for now
+                // messages: [...state.messages,
+                //     [0, "Next turn!"]
+                // ]
+            }
         default:
             return state
     }

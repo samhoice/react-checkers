@@ -80,9 +80,15 @@ class GameViewSet(mixins.CreateModelMixin,
 
                 channel_layer = get_channel_layer()
                 # TODO: this should send to the group for the game, not "notifier"
-                async_to_sync(channel_layer.group_send)("notifier", 
-                        {'type': "notify.turn",
-                            'message': "{},{}".format(game.id, game.getTurnNum())})
+                async_to_sync(channel_layer.group_send)(
+                    "notifier", {
+                        'type': "notify.turn",
+                        'message': "{},{}".format(
+                            game.id,
+                            game.getTurnNum()
+                        )
+                    }
+                )
 
                 return Response({"move": serializer.data,
                                  "board": board_serializer.data,
@@ -141,15 +147,34 @@ class GameViewSet(mixins.CreateModelMixin,
                 if winner and winner == 'b':
                     game.winner = game.black_player
                     game.save()
+                    channel_layer = get_channel_layer()
+                    async_to_sync(channel_layer.group_send)(
+                        "notifier", {
+                            'type': "chat.message",
+                            'message': "Black wins!",
+                            'sender': 0,
+                        }
+                    )
                 elif winner:
                     game.winner = game.white_player
                     game.save()
-
-                if turn.complete:
                     channel_layer = get_channel_layer()
-                    async_to_sync(channel_layer.group_send)("notifier", 
-                        {'type': "notify.turn",
-                            'message': "{},{}".format(game.id, game.getTurnNum())})
+                    async_to_sync(channel_layer.group_send)(
+                        "notifier", {
+                            'type': "chat.message",
+                            'message': "Red wins!",
+                            'sender': 0,
+                        }
+                    )
+
+                # if turn.complete:
+                channel_layer = get_channel_layer()
+                async_to_sync(channel_layer.group_send)(
+                    "notifier", {
+                        'type': "notify.turn",
+                        'message': "{},{}".format(game.id, game.getTurnNum())
+                        }
+                    )
 
                 board_serializer = BoardSerializer(board)
                 return Response({"jump": serializer.data,

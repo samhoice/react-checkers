@@ -109,7 +109,7 @@ class GameList extends Component {
     return (
       <Container>
         <h1>Game List</h1>
-        <Table striped bordered hover>
+        <Table bordered hover>
         <thead>
         <tr>
           <th>Black</th>
