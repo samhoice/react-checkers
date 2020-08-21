@@ -30,7 +30,7 @@ I might leave this one to someone smarter than me. Suffice to say, with the API 
 
 ### Docker
 
-Simple enough. Primary blocker is I don't have docker set up on my laptop. <shrug />
+Launch with Docker Compose
 
 ### Tests
 
